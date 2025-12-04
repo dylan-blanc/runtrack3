@@ -1,9 +1,17 @@
-function bisextile(annee) {
-  if ((annee % 4 === 0 && annee % 100 !== 0) || annee % 400 === 0) return true;
-  else {
-    return false;
-  }
+function afficherjourssemaine() {
+  const jourssemaine = [
+    "lundi",
+    "mardi",
+    "mercredi",
+    "jeudi",
+    "vendredi",
+    "samedi",
+    "dimanche",
+  ];
+  
+for (let j = 0; j < jourssemaine.length; j++) {
+  console.log(jourssemaine[j]);
+}
 }
 
-console.log(bisextile(2020)); // true
-console.log(bisextile(1900)); // false
+afficherjourssemaine();
