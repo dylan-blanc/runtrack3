@@ -16,7 +16,7 @@ function jourtravaille() {
       }
     }
 
-    const date = new Date(jourDuMois, mois - 1, annee);
+    const date = new Date(annee, mois - 1, jourDuMois);
     const estWeekend = date.getDay() === 0 || date.getDay() === 6;
     const estJourFerie = JoursFerieEnNumerique.includes(jour);
 
