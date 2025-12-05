@@ -13,7 +13,10 @@
 </head>
 
 <body>
-
+    <p id="compteur">0</p>
+    <button onclick="incrementer()">Incrementer</button>
+    <button onclick="decrementer()">Decrementer</button>
+    <button onclick="reset()">Reinitialiser</button>
 </body>
 
 </html>

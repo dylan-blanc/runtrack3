@@ -13,7 +13,8 @@
 </head>
 
 <body>
-
+    <button id="monBouton">Clique-moi</button>
+    <p id="message"></p>
 </body>
 
 </html>

@@ -13,8 +13,8 @@
 </head>
 
 <body>
-
-
+<div id="bwat">LA BWAT</div>
+<button onclick="toggleBWAT()">Afficher/Masquer</button>
 </body>
 
 </html>

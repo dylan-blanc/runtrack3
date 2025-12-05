@@ -13,7 +13,9 @@
 </head>
 
 <body>
-
+    <div id="zone">Zone colorée</div>
+    <button onclick="changerCouleur('red')">Rouge</button>
+    <button onclick="changerCouleur('blue')">Bleu</button>
+    <button onclick="changerCouleur('green')">Vert</button>
 </body>
-
 </html>

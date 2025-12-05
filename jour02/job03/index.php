@@ -14,7 +14,9 @@
 </head>
 
 <body>
-
+    <input id="prenom" type="text" placeholder="Entrez votre prénom">
+    <button onclick="afficherPrenom()">valider</button>
+    <p id="resultat"></p>
 </body>
 
 </html>
