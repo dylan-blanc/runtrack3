@@ -1,3 +1,7 @@
+<?php
+require_once 'script.js';
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -9,7 +13,7 @@
 </head>
 
 <body>
-
+<h1>Voir la console pour le résultat</h1>
 </body>
 
 </html>

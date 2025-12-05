@@ -1,7 +1,7 @@
 function jourtravaille() {
   const annee = 2020;
   const JoursFerieEnNumerique = [
-    1, 103, 121, 128, 141, 152, 195, 227, 305, 315, 359,
+    1, 104, 122, 129, 142, 153, 196, 228, 306, 316, 360,
   ];
 
   for (let jour = 1; jour <= 365; jour++) {
