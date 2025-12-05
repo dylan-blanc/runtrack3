@@ -1,12 +1,16 @@
-function afficherPrenom() {
-  let prenom = document.getElementById("prenom").value;
+let compteur = 0;
 
-  let resultat = document.getElementById("resultat");
-  if (prenom) {
-    resultat.textContent = "Bonjour " + prenom;
-    resultat.style.color = "blue";
-    resultat.style.fontSize = "3em";
-  } else {
-    resultat.textContent = "";
-  }
+function addone() {
+  compteur++;
+  document.getElementById("compteur").innerText = compteur;
 }
+
+function subtractone() {
+  compteur--;
+  document.getElementById("compteur").innerText = compteur;
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  document.querySelector(".add").addEventListener("click", addone);
+  document.querySelector(".sub").addEventListener("click", subtractone);
+});

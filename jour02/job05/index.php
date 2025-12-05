@@ -5,16 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job05</title>
-    <script src="./script.js"></script>
-
-    <script>
-
-    </script>
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
-    <button id="monBouton">Clique-moi</button>
-    <p id="message"></p>
+    <!-- <button id="monBouton">Clique-moi</button>
+    <p id="message"></p> -->
+
+    <footer id="footer">
+        <p>Hello o7</p>
+    </footer>
+
+
+    <script src="./script.js"></script>
 </body>
 
 </html>

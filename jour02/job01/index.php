@@ -5,18 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job01</title>
-    <script src="./script.js"></script>
-
-    <script>
-
-    </script>
 </head>
 
 <body>
-    <p id="compteur">0</p>
-    <button onclick="incrementer()">Incrementer</button>
-    <button onclick="decrementer()">Decrementer</button>
-    <button onclick="reset()">Reinitialiser</button>
+    <article id="citation">La vie a beaucoup plus d’imagination que nous</article>
+    <button id="button">Clic Clic</button>
+
+    <script src="./script.js"></script>
+
 </body>
 
 </html>

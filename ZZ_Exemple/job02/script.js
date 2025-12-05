@@ -1,5 +1,5 @@
-function showhide() {
-  let BWAT = document.getElementById("boite");
+function toggleBWAT() {
+  let BWAT = document.getElementById("bwat");
 
   if (BWAT.style.display === "none") {
     BWAT.style.display = "block";

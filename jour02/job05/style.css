@@ -1,0 +1,14 @@
+body {
+    min-height: 4096px;
+    margin: 0;
+    padding: 0;
+}
+
+footer {
+width: 100%;
+position: fixed;
+bottom: 0;
+text-align: center;
+color: yellow;
+background-color: navy;
+}
