@@ -12,7 +12,7 @@
 </head>
 
 <body>
-    <div id="boite">L'important n'est pas la chute, mais l'atterrissage</div>
+    <div id="button">L'important n'est pas la chute, mais l'atterrissage</div>
     <button onclick="showhide()">Afficher/Masquer</button>
     <script src="./script.js"></script>
 

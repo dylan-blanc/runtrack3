@@ -46,7 +46,7 @@ function konamiCodeListener(callback) {
   });
 }
 
-function clearLog(e) {
+function clearLog() {
   const textarea = document.getElementById("keylogger");
   textarea.value = "";
   konamiIndex = 0;

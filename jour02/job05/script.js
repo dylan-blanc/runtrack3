@@ -27,15 +27,13 @@ function changefootercolor(scroll_pos) {
   }
 }
 
-function onScrollFrame() {
-  changefootercolor(lastknown_scroll_position);
-  ticking = false;
-}
-
 function onScroll() {
   lastknown_scroll_position = window.scrollY;
   if (!ticking) {
-    window.requestAnimationFrame(onScrollFrame);
+    window.requestAnimationFrame(() => {
+      changefootercolor(lastknown_scroll_position);
+      ticking = false;
+    });
     ticking = true;
   }
 }
