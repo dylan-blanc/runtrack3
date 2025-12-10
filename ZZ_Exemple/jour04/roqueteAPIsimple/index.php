@@ -9,7 +9,10 @@
 
 <body>
 
-    <script src="./jquery-3.7.1.min.js"></script>
+    <div id="users-list"></div>
+
+
+
     <script src="./script.js"></script>
 </body>
 
