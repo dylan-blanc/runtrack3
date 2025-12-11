@@ -8,7 +8,13 @@
 </head>
 
 <body>
-
+    <form id="pokemonForm">
+        <input type="text" id="id" placeholder="ID" />
+        <input type="text" id="nom" placeholder="Nom" />
+        <select id="type"></select>
+        <button type="submit" id="submit">Filtrer</button>
+    </form>
+    <div id="resultat"></div>
 
 
     <script src="./jquery-3.7.1.min.js"></script>
