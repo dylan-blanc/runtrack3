@@ -8,12 +8,21 @@
 </head>
 
 <body>
+    <header>
+        <ul>
+            <li><a href="index.php">Accueil</a></li>
+            <li><a href="connexion.php">connexion</a></li>
+            <li><a href="inscription.php">inscription</a></li>
+        </ul>
+    </header>
+
 
 
 
 
 
     <script src="./script.js"></script>
+    </div>
 </body>
 
 </html>
