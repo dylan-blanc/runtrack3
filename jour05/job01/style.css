@@ -1,0 +1,106 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/*
+* ** Layout (index)
+*/
+
+header {
+  background-color: black;
+  color: white;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+header ul {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+header ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  font-family: fantasy;
+}
+
+.index-exclusion {
+  padding: 20px;
+  text-align: center;
+  font-size: 40px;
+}
+
+/*
+* ** Fromulaire
+*/
+
+form {
+  max-width: 400px;
+  margin: 10px auto;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+form label {
+  display: block;
+  margin-bottom: 2px;
+  font-weight: 500;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+form input {
+  display: block;
+  width: 100%;
+  margin-bottom: 2px;
+  padding: 5px 6px;
+  box-sizing: border-box;
+}
+
+/*
+* ** VRAC
+*/
+
+button {
+  background-color: rgb(72, 199, 72);
+  color: black;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 3px;
+  display: block;
+  margin: 10px auto 0 auto;
+}
+
+/*
+* ** Messages d'erreur de validation
+*/
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  display: block;
+  min-height: 16px;
+  margin-bottom: 5px;
+}
+
+/* Bordure rouge quand le champ est invalide */
+.input-error {
+  border: 2px solid red !important;
+}
+
+/* Bordure verte quand le champ est valide */
+.input-valid {
+  border: 2px solid green !important;
+}
