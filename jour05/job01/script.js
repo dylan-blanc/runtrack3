@@ -107,21 +107,30 @@ document.addEventListener("focusout", function (e) {
 
 // ======================== VALIDATION DES FORMULAIRES ========================
 
+// Définition des expressions régulières (REGEX) pour valider les champs du formulaire
+// Une expression régulière permet de vérifier si une chaîne de caractères respecte un certain format
 const REGEX = {
+  // Autorise les lettres (majuscules/minuscules), accents, espaces et tirets
   nomPrenom: /^[A-Za-zÀ-ÿ\s\-]+$/,
+  // Format d'email classique (ex: exemple@mail.com)
   email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+  // Mot de passe : 8 à 30 caractères, au moins 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial
   password:
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,30}$/,
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>\/?]).{8,30}$/,
+  // Adresse : lettres, chiffres, espaces, tirets
   adresse: /^[A-Za-zÀ-ÿ0-9\s\-]+$/,
+  // Code postal : uniquement des chiffres
   codePostal: /^[0-9]+$/,
 };
 
+// Expressions régulières pour filtrer les caractères non autorisés à la saisie (empêche l'utilisateur de taper des caractères invalides)
 const REGEX_INPUT = {
-  nomPrenom: /[^A-Za-zÀ-ÿ\s\-]/g,
-  adresse: /[^A-Za-zÀ-ÿ0-9\s\-]/g,
-  codePostal: /[^0-9]/g,
+  nomPrenom: /[^A-Za-zÀ-ÿ\s\-]/g, // tout sauf lettres, accents, espaces, tirets
+  adresse: /[^A-Za-zÀ-ÿ0-9\s\-]/g, // tout sauf lettres, chiffres, espaces, tirets
+  codePostal: /[^0-9]/g, // tout sauf chiffres
 };
 
+// Messages d'erreur personnalisés pour chaque champ
 const MESSAGES = {
   nom: "Minimum 2 lettres, maximum 20. Chiffres non autorisés.",
   prenom: "Minimum 2 lettres, maximum 20. Chiffres non autorisés.",
@@ -133,33 +142,47 @@ const MESSAGES = {
   codePostal: "Merci d'entrer un code postal valide (5 chiffres).",
 };
 
+
+// Affiche un message d'erreur sous le champ concerné et change la couleur du champ
+// errorId : id de la balise <span> où afficher l'erreur
+// message : texte à afficher
+// input : champ de saisie à colorer (rouge si erreur, vert si valide)
 function afficherErreur(errorId, message, input) {
-  const errorSpan = document.getElementById(errorId);
-  if (errorSpan) errorSpan.textContent = message;
+  const errorSpan = document.getElementById(errorId); // Récupère la balise d'erreur
+  if (errorSpan) errorSpan.textContent = message; // Affiche le message
   if (input) {
-    input.classList.toggle("input-error", !!message);
-    input.classList.toggle("input-valid", !message);
+    // Ajoute ou retire les classes CSS selon la validité
+    input.classList.toggle("input-error", !!message); // Rouge si erreur
+    input.classList.toggle("input-valid", !message); // Vert si valide
   }
 }
 
+
+// Fonction générique pour valider un champ de formulaire
+// input : champ à valider
+// errorId : id du <span> pour afficher l'erreur
+// options : regex (format), min/max (longueur), message (erreur)
 function validerChamp(
   input,
   errorId,
   { regex, min = 0, max = Infinity, message }
 ) {
-  const valeur = input.value.trim();
+  const valeur = input.value.trim(); // On enlève les espaces au début/fin
+  // Vérifie la longueur et le format
   if (
     valeur.length < min ||
     valeur.length > max ||
     (regex && !regex.test(valeur))
   ) {
-    afficherErreur(errorId, message, input);
+    afficherErreur(errorId, message, input); // Affiche l'erreur
     return false;
   }
-  afficherErreur(errorId, "", input);
+  afficherErreur(errorId, "", input); // Pas d'erreur
   return true;
 }
 
+
+// Valide le mot de passe selon les règles définies dans REGEX.password
 function validerPassword(input, errorId) {
   return validerChamp(input, errorId, {
     regex: REGEX.password,
@@ -169,6 +192,8 @@ function validerPassword(input, errorId) {
   });
 }
 
+
+// Vérifie que la confirmation du mot de passe correspond bien au mot de passe
 function validerPasswordConfirm(inputPassword, inputConfirm, errorId) {
   if (inputPassword.value !== inputConfirm.value || inputConfirm.value === "") {
     afficherErreur(errorId, MESSAGES.passwordConfirm, inputConfirm);
@@ -178,30 +203,37 @@ function validerPasswordConfirm(inputPassword, inputConfirm, errorId) {
   return true;
 }
 
+
+// Empêche l'utilisateur de saisir des caractères non autorisés dans un champ
+// Par exemple, interdit les chiffres dans le nom/prénom
 function filtrerSaisie(input, regexFiltre) {
   input.addEventListener("input", function () {
-    this.value = this.value.replace(regexFiltre, "");
+    this.value = this.value.replace(regexFiltre, ""); // Remplace les caractères interdits par rien
   });
 }
 
+
+// Initialise la validation du formulaire d'inscription
+// Ajoute les filtres de saisie et les vérifications à chaque champ
 function initValidationInscription() {
+  // On récupère chaque champ du formulaire par son id
   const nom = document.getElementById("Inscription-Nom");
   const prenom = document.getElementById("Inscription-Prenom");
   const email = document.getElementById("inscription-Email");
   const password = document.getElementById("inscription-Password");
-  const passwordConfirm = document.getElementById(
-    "inscription-Password-confirm"
-  );
+  const passwordConfirm = document.getElementById("inscription-Password-confirm");
   const adresse = document.getElementById("inscription-Adresse");
   const codePostal = document.getElementById("inscription-Postal");
   const form = document.getElementById("form-inscription");
-  if (!nom) return;
+  if (!nom) return; // Si le formulaire n'est pas présent, on arrête
 
+  // Empêche la saisie de caractères interdits dans chaque champ
   filtrerSaisie(nom, REGEX_INPUT.nomPrenom);
   filtrerSaisie(prenom, REGEX_INPUT.nomPrenom);
   filtrerSaisie(adresse, REGEX_INPUT.adresse);
   filtrerSaisie(codePostal, REGEX_INPUT.codePostal);
 
+  // Ajoute la validation au moment où l'utilisateur quitte le champ (blur)
   nom.addEventListener("blur", function () {
     validerChamp(this, "error-nom", {
       regex: REGEX.nomPrenom,
@@ -246,7 +278,9 @@ function initValidationInscription() {
     });
   });
 
+  // Quand on soumet le formulaire, on vérifie tous les champs
   form.addEventListener("submit", function (e) {
+    // On stocke le résultat de chaque validation dans un tableau
     const champs = [
       validerChamp(nom, "error-nom", {
         regex: REGEX.nomPrenom,
@@ -282,6 +316,7 @@ function initValidationInscription() {
         message: MESSAGES.codePostal,
       }),
     ];
+    // Si au moins une validation échoue, on empêche l'envoi du formulaire
     if (champs.includes(false)) {
       e.preventDefault();
       console.log("Formulaire inscription invalide");
@@ -289,11 +324,16 @@ function initValidationInscription() {
   });
 }
 
+
+// Initialise la validation du formulaire de connexion
 function initValidationConnexion() {
+  // On récupère les champs email et mot de passe
   const email = document.getElementById("connexion-Email");
   const password = document.getElementById("connexion-Password");
   const form = document.getElementById("form-connexion");
-  if (!email) return;
+  if (!email) return; // Si le formulaire n'est pas présent, on arrête
+
+  // Ajoute la validation au moment où l'utilisateur quitte le champ
   email.addEventListener("blur", function () {
     validerChamp(this, "error-email-connexion", {
       regex: REGEX.email,
@@ -303,6 +343,8 @@ function initValidationConnexion() {
   password.addEventListener("blur", function () {
     validerPassword(this, "error-password-connexion");
   });
+
+  // Quand on soumet le formulaire, on vérifie les deux champs
   form.addEventListener("submit", function (e) {
     const champs = [
       validerChamp(email, "error-email-connexion", {
@@ -311,6 +353,7 @@ function initValidationConnexion() {
       }),
       validerPassword(password, "error-password-connexion"),
     ];
+    // Si une validation échoue, on empêche l'envoi
     if (champs.includes(false)) {
       e.preventDefault();
       console.log("Formulaire connexion invalide");
@@ -318,11 +361,15 @@ function initValidationConnexion() {
   });
 }
 
+
+// MutationObserver permet de détecter quand le contenu de la page change (ex: chargement dynamique d'une vue)
+// On relance la validation à chaque changement du contenu principal
 const observateur = new MutationObserver(function () {
   initValidationInscription();
   initValidationConnexion();
 });
 
+// Quand la page est chargée, on observe le conteneur principal pour détecter les changements
 document.addEventListener("DOMContentLoaded", function () {
   const viewContainer = document.getElementById("view-container");
   if (viewContainer) {
