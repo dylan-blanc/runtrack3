@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <title>Job04</title>
+  </head>
+
+  <body>
+    <header class="">
+      <nav class="teal darken-4">
+        <div class="nav-wrapper">
+          <div class="center" id="">
+            <a class="" href="index.html">Accueil</a>
+            <a class="" href="index.html">Inscription</a>
+            <a class="" href="index.html">Connexion</a>
+            <a class="" href="index.html">Rechercher</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <section>
+      <div class="row">
+        <h2 class="center-align">Créer un compte</h2>
+        <form class="col s3 offset-s5" method="post">
+          <p>
+            <label>
+              <input type="checkbox" class="filled-out" for="Civilité" />
+              <span>Homme</span>
+            </label>
+          </p>
+          <p>
+            <label>
+              <input type="checkbox" class="filled-in" for="Civilité" />
+              <span>Femme</span>
+            </label>
+          </p>
+          <div class="">
+            <i class="material-icons prefix">account_circle</i>
+            <label for="prenom">Prénom :</label><br />
+            <input type="text" id="prenom" name="prenom" required />
+            <i class="material-icons prefix">account_circle</i>
+            <label for="nom">Nom :</label>
+            <input type="text" id="nom" name="nom" required />
+            <i class="material-icons">add_location</i>
+            <label for="adresse">Adresse :</label>
+            <input type="text" id="adresse" name="adresse" required />
+                        <i class="material-icons">mail_outline</i>
+
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" required />
+                                    <i class="material-icons">mail_outline</i>
+
+            <label for="password">Mot de passe :</label>
+            <input type="password" id="password" name="password" required />
+                                    <i class="material-icons">mail_outline</i>
+
+            <label for="password2">Confirmer le mot de passe :</label>
+            <input type="password" id="password2" name="password2" required />
+          </div>
+          <fieldset>
+            <legend>Passions</legend>
+            <label>
+              <input type="checkbox" name="passions[]" value="informatique" />
+              Informatique
+            </label>
+            <label>
+              <input type="checkbox" name="passions[]" value="voyages" />
+              Voyages
+            </label>
+            <label>
+              <input type="checkbox" name="passions[]" value="sport" />
+              Sport
+            </label>
+            <label>
+              <input type="checkbox" name="passions[]" value="lecture" />
+              Lecture
+            </label>
+          </fieldset>
+          <div class="center-align">
+            <input class="btn pt-5" type="submit" value="Créer le compte" />
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <footer class="">
+      <nav class="teal darken-4">
+        <div class="nav-wrapper">
+          <div class="center" id="">
+            <a class="" href="index.html">Accueil</a>
+            <a class="" href="index.html">Inscription</a>
+            <a class="" href="index.html">Connexion</a>
+            <a class="" href="index.html">Rechercher</a>
+          </div>
+        </div>
+      </nav>
+    </footer>
+
+    <script src="./script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  </body>
+</html>
