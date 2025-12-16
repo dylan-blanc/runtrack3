@@ -72,12 +72,14 @@
                 </div>
                 <div class="col-8">
                     <div id="jumbotron-blade" class="px-4 py-5 my-5 bg-secondary bg-opacity-10 text-start">
-                        <h1 class="display-5 fw-bold">Bonjour, monde!</h1>
-                        <p class="lead mb-1">Il existe plusieurs visions du terme :</p>
-                        <p class="mb-1">le monde est la matière, l'espace et les phénomènes qui nous sont accessibles par les sens, l'expérience ou la raison.</p>
-                        <p class="mb-3">Le sens le plus courant désigne notre planète, la Terre, avec ses habitants, et son environnement plus ou moins naturel.</p>
-                        <hr>
-                        <p class="fw-semibold mb-3">Le sens étendu désigne l'univers dans son ensemble.</p>
+                        <section id="TuMeVoisTuMeVoisPlus">
+                            <h1 class="display-5 fw-bold">Bonjour, monde!</h1>
+                            <p class="lead mb-1">Il existe plusieurs visions du terme :</p>
+                            <p class="mb-1">le monde est la matière, l'espace et les phénomènes qui nous sont accessibles par les sens, l'expérience ou la raison.</p>
+                            <p class="mb-3">Le sens le plus courant désigne notre planète, la Terre, avec ses habitants, et son environnement plus ou moins naturel.</p>
+                            <hr>
+                            <p class="fw-semibold mb-3">Le sens étendu désigne l'univers dans son ensemble.</p>
+                        </section>
                         <div class="d-flex align-items-center gap-3">
                             <button id="reboot-btn" type="button" class="btn btn-danger btn-lg px-4">Rebooter le Monde</button>
                             <div class="spinner-border text-secondary" role="status">
@@ -93,7 +95,6 @@
                                 </li>
                                 <li class="page-item"><a class="page-link" href="#">1</a></li>
                                 <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item disabled"><a class="page-link" href="#">3</a></li>
                                 <li class="page-item">
                                     <a class="page-link" href="#" aria-label="Next">
                                         <span aria-hidden="true">&raquo;</span>
@@ -104,7 +105,7 @@
                     </div>
                 </div>
                 <div class="col-2">
-                    <ul class="list-group">
+                    <ul id="list-groupJS" class="list-group">
                         <li class="list-group-item active" aria-current="true">Limbes</li>
                         <li class="list-group-item">Luxure</li>
                         <li class="list-group-item">Gourmandise</li>
@@ -124,8 +125,10 @@
         <div class="position-relative mb-1" style="height: 40px;">
             <span class="fw-semibold text-secondary position-absolute top-0 end-0" style="margin-top: -5px; margin-right: 25%">Installation de AI 9000</span>
             <div class="position-absolute start-50 translate-middle-x w-50" style="top: 24px;">
+                <button id="left-arrow" class="position-absolute top-0 start-0" style="border: 0; scale: 2; margin-right: -6%; background-color: #dadcde; margin-top: -10px;">←</button>
                 <div class="progress" role="progressbar" aria-label="Warning striped example" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
                     <div class="progress-bar progress-bar-striped bg-warning" style="width: 75%"></div>
+                    <button id="right-arrow" class="position-absolute top-0 end-0" style="border: 0; scale: 2.5; margin-right: -6%; background-color: #dadcde; margin-top: -7px;">→</button>
                 </div>
             </div>
         </div>

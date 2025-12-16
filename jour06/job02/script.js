@@ -1,105 +1,165 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const citations = [
     "J’ai vu tant de choses, que vous, humains, ne pourriez pas croire… De grands navires en feu surgissant de l’épaule d’Orion, j’ai vu des rayons fabuleux, des rayons C, briller dans l’ombre de la Porte de Tannhaüser. Tous ces moments se perdront dans l’oubli, comme les larmes dans la pluie. Il est temps de mourir.",
     "C'est dommage qu'elle doive mourir, mais c'est ainsi.",
     "Avez-vous déjà désactivé un humain par erreur ?",
     "Étrange sensation que de vivre dans la peur… voila ce que c’est d’être un esclave.",
   ];
-  const btn = document.getElementById("reboot-btn");
-  const jumbotron = document.getElementById("jumbotron-blade");
 
-  btn.addEventListener("click", function () {
+  const jumbotron = document.getElementById("jumbotron-blade");
+  if (!jumbotron) return;
+
+  const paginationNav = jumbotron.querySelector(
+    "nav[aria-label='Page navigation example']"
+  );
+  if (!paginationNav) return;
+
+  /*
+   * * Changement de pages
+   */
+
+  function detachNode(node) {
+    const parent = node.parentElement;
+    const nextSibling = node.nextSibling;
+    if (parent) parent.removeChild(node);
+    return { parent, nextSibling };
+  }
+
+  function reattachNode(node, { parent, nextSibling }) {
+    if (parent) {
+      parent.insertBefore(node, nextSibling);
+      return;
+    }
+    jumbotron.appendChild(node);
+  }
+
+  function getPageIndexFromLink(link) {
+    const aria = link.getAttribute("aria-label");
+    if (aria === "Previous") return currentPageIdx - 1;
+    if (aria === "Next") return currentPageIdx + 1;
+
+    const n = parseInt((link.textContent || "").trim(), 10);
+    if (Number.isNaN(n)) return null;
+    return n - 1;
+  }
+
+  /*
+   * * --------------------------------------------------------
+   */
+
+  const pages = [
+    `
+        <h1 class="display-5 fw-bold">Papichien</h1>
+        <img src="asset/papichien.jpg" alt="Papichien" class="img-fluid rounded mb-3" style="max-width:300px;">
+        <p class="lead mb-1">Un autre type de Papillon</p>
+        <p class="mb-3">Ne pas ingerer...</p>
+        `,
+  ];
+
+  const totalPages = pages.length + 1;
+  let currentPageIdx = 0;
+
+  if (!jumbotron.dataset.initialContent) {
+    const navSlot = detachNode(paginationNav);
+    jumbotron.dataset.initialContent = jumbotron.innerHTML;
+    reattachNode(paginationNav, navSlot);
+  }
+
+  function render(pageIdx) {
+    if (pageIdx < 0 || pageIdx >= totalPages) return;
+
+    currentPageIdx = pageIdx;
+
+    detachNode(paginationNav);
+
+    if (pageIdx === 0) {
+      jumbotron.innerHTML = jumbotron.dataset.initialContent;
+    } else {
+      jumbotron.innerHTML = pages[pageIdx - 1];
+    }
+
+    jumbotron.appendChild(paginationNav);
+  }
+
+  paginationNav.addEventListener("click", (e) => {
+    const link = e.target.closest("a.page-link");
+    if (!link) return;
+    e.preventDefault();
+
+    const idx = getPageIndexFromLink(link);
+    if (idx === null) return;
+    if (idx >= 0 && idx < totalPages) render(idx);
+  });
+
+  // ✅ Reboot : remplace le contenu de la section par une citation
+  jumbotron.addEventListener("click", (e) => {
+    const reboot = e.target.closest("#reboot-btn");
+    if (!reboot) return;
+
+    const section = jumbotron.querySelector("#TuMeVoisTuMeVoisPlus");
+    if (!section) return;
+
     const random = citations[Math.floor(Math.random() * citations.length)];
-    jumbotron.innerHTML = `<h1 class="display-5 fw-bold">"${random}"</h1>`;
+
+    section.innerHTML = `
+      <h1 class="display-5 fw-bold">"${random}"</h1>
+    `;
   });
 });
 
 
+  /*
+   * * --------------------------------------------------------
+   * * ----------------------List-GROUP------------------------
+   * * --------------------------------------------------------
+   */
+
+document.addEventListener("click", (e) => {
+  const item = e.target.closest(".list-group-item");
+  if (!item) return;
+
+  const listGroup = item.closest(".list-group");
+  if (!listGroup) return;
+
+  listGroup.querySelectorAll(".list-group-item").forEach((li) => {
+    li.classList.remove("active");
+  });
+
+  item.classList.add("active");
+});
+
+
 /*
-* ** PAGINATION changement de contenu jumbotron **
-*/
+  * * --------------------------------------------------------
+  * * ------------------Progress-BAR-------------------------
+  * * --------------------------------------------------------
+  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const jumbotron = document.getElementById("jumbotron-blade");
+  const leftArrow = document.getElementById("left-arrow");
+  const rightArrow = document.getElementById("right-arrow");
+  const progressBar = document.querySelector(".progress-bar");
 
-  const pages = [
-    // Page 1
-    `
-        <h1 class="display-5 fw-bold">Bonjour, monde!</h1>
-        <p class="lead mb-1">Il existe plusieurs visions du terme :</p>
-        <p class="mb-1">le monde est la matière, l'espace et les phénomènes qui nous sont accessibles par les sens, l'expérience ou la raison.</p>
-        <p class="mb-3">Le sens le plus courant désigne notre planète, la Terre, avec ses habitants, et son environnement plus ou moins naturel.</p>
-        <hr>
-        <p class="fw-semibold mb-3">Le sens étendu désigne l'univers dans son ensemble.</p>
-        <div class="d-flex align-items-center gap-3">
-            <button id="reboot-btn" type="button" class="btn btn-danger btn-lg px-4">Rebooter le Monde</button>
-            <div class="spinner-border text-secondary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-        `,
-    // Page 2
-    `
-        <h1 class="display-5 fw-bold">Papichien</h1>
-        <img src="asset/papichien.jpg" alt="Papichien" class="img-fluid rounded mb-3" style="max-width:300px;">
-        <p class="lead mb-1">Voici Papichien, le meilleur ami de Papillon !</p>
-        <p class="mb-3">Il adore les caresses et les promenades.</p>
-        `,
-  ];
+  if (leftArrow && rightArrow && progressBar) {
+    function getCurrentWidth() {
+      const width = progressBar.style.width.replace("%", "");
+      return parseInt(width, 10) || 0;
+    }
 
-  function render(pageIdx) {
-    jumbotron.innerHTML = pages[pageIdx] + paginationHTML(pageIdx);
-    bindPagination();
-  }
+    function setWidth(val) {
+      const newVal = Math.max(0, Math.min(100, val));
+      progressBar.style.width = `${newVal}%`;
+      progressBar.setAttribute("aria-valuenow", newVal);
+    }
 
-  function paginationHTML(activeIdx) {
-    return `
-        <nav aria-label="Page navigation example" class="mt-4 pe-0 d-flex justify-content-end">
-            <ul class="pagination mb-0">
-                <li class="page-item${activeIdx === 0 ? " disabled" : ""}">
-                    <a class="page-link" href="#" data-page="${
-                      activeIdx - 1
-                    }" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                ${pages
-                  .map(
-                    (_, i) =>
-                      `<li class="page-item${
-                        activeIdx === i ? " disabled" : ""
-                      }">
-                        <a class="page-link" href="#" data-page="${i}">${
-                        i + 1
-                      }</a>
-                    </li>`
-                  )
-                  .join("")}
-                <li class="page-item${
-                  activeIdx === pages.length - 1 ? " disabled" : ""
-                }">
-                    <a class="page-link" href="#" data-page="${
-                      activeIdx + 1
-                    }" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        `;
-  }
+    leftArrow.addEventListener("click", () => {
+      setWidth(getCurrentWidth() - 25);
+    });
 
-  function bindPagination() {
-    jumbotron.querySelectorAll(".page-link").forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        const page = parseInt(link.getAttribute("data-page"));
-        if (!isNaN(page) && page >= 0 && page < pages.length) {
-          render(page);
-        }
-      });
+    rightArrow.addEventListener("click", () => {
+      setWidth(getCurrentWidth() + 25);
     });
   }
-
-  render(0);
 });
+
+ 
