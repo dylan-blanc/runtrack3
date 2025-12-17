@@ -29,65 +29,90 @@
     </header>
 
     <section>
-      <div class="row">
+      <div class="row black-text">
         <h2 class="center-align">Créer un compte</h2>
         <form class="col s3 offset-s5" method="post">
           <p>
             <label>
               <input type="checkbox" class="filled-out" for="Civilité" />
-              <span>Homme</span>
+              <span class="black-text">Homme</span>
             </label>
           </p>
           <p>
             <label>
               <input type="checkbox" class="filled-in" for="Civilité" />
-              <span>Femme</span>
+              <span class="black-text">Femme</span>
             </label>
           </p>
           <div class="">
             <i class="material-icons prefix">account_circle</i>
-            <label for="prenom">Prénom :</label><br />
+            <label class="black-text" for="prenom">Prénom :</label><br />
             <input type="text" id="prenom" name="prenom" required />
             <i class="material-icons prefix">account_circle</i>
-            <label for="nom">Nom :</label>
+            <label class="black-text" for="nom">Nom :</label>
             <input type="text" id="nom" name="nom" required />
             <i class="material-icons">add_location</i>
-            <label for="adresse">Adresse :</label>
+            <label class="black-text" for="adresse">Adresse :</label>
             <input type="text" id="adresse" name="adresse" required />
-                        <i class="material-icons">mail_outline</i>
+            <i class="material-icons">mail</i>
 
-            <label for="email">Email :</label>
+            <label class="black-text" for="email">Email :</label>
             <input type="email" id="email" name="email" required />
-                                    <i class="material-icons">mail_outline</i>
+            <i class="material-icons">lock_open</i>
 
-            <label for="password">Mot de passe :</label>
+            <label class="black-text" for="password">Mot de passe :</label>
             <input type="password" id="password" name="password" required />
-                                    <i class="material-icons">mail_outline</i>
+            <i class="material-icons">lock</i>
 
-            <label for="password2">Confirmer le mot de passe :</label>
+            <label class="black-text" for="password2">Confirmer le mot de passe :</label>
             <input type="password" id="password2" name="password2" required />
           </div>
           <fieldset>
             <legend>Passions</legend>
             <label>
-              <input type="checkbox" name="passions[]" value="informatique" />
-              Informatique
+              <input
+                type="checkbox"
+                class="filled-out"
+                for="Passions"
+                name="passions[]"
+                value="informatique"
+              />
+              <span class="black-text">Informatique</span>
             </label>
             <label>
-              <input type="checkbox" name="passions[]" value="voyages" />
-              Voyages
+              <input
+                type="checkbox"
+                class="filled-out"
+                for="Passions"
+                name="passions[]"
+                value="voyages"
+              />
+              <span class="black-text">Voyages</span>
             </label>
             <label>
-              <input type="checkbox" name="passions[]" value="sport" />
-              Sport
+              <input
+                type="checkbox"
+                class="filled-out"
+                for="Passions"
+                name="passions[]"
+                value="sport"
+              />
+              <span class="black-text">Sport</span>
             </label>
             <label>
-              <input type="checkbox" name="passions[]" value="lecture" />
-              Lecture
+              <input
+                type="checkbox"
+                class="filled-out"
+                for="Passions"
+                name="passions[]"
+                value="lecture"
+              />
+              <span class="black-text">Lecture</span>
             </label>
           </fieldset>
           <div class="center-align">
-            <input class="btn pt-5" type="submit" value="Créer le compte" />
+            <div class="divider"></div>
+            <input class="btn" type="submit" value="Créer le compte" />
           </div>
         </form>
       </div>
