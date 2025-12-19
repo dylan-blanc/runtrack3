@@ -30,7 +30,7 @@ app.post("/signin", (req, res) => {
 
 app.get("/profil/:userName", (req, res) => {
   console.log(req);
-  res.send(`<h1> Bonsoir ${req.params.userName}</h1>`);
+  res.send(`<h1> Bonsoir rere ${req.params.userName}</h1>`);
 });
 
 app.get("/users", (req, res) => {
