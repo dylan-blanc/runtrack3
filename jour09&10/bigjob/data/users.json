@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "email": "admin@laplateforme.io",
+    "nom": "Min",
+    "prenom": "Ad",
+    "password": "test",
+    "role": "admin"
+  },
+  {
+    "id": 2,
+    "email": "jean@laplateforme.io",
+    "nom": "Elly",
+    "prenom": "Jean",
+    "password": "test",
+    "role": "user"
+  }
+]
