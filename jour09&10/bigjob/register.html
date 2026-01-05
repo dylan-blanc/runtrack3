@@ -1,0 +1,44 @@
+<div id="inscription-form">
+  <form id="form-inscription">
+    <label for="Nom">Nom :</label>
+    <input type="text" id="Inscription-Nom" name="Nom" required />
+    <span class="error-message" id="error-nom"></span>
+
+    <label for="Prenom">Prenom :</label>
+    <input type="text" id="Inscription-Prenom" name="Prenom" required />
+    <span class="error-message" id="error-prenom"></span>
+
+    <label for="email">Email :</label>
+    <input type="text" id="inscription-Email" name="email" required />
+    <span class="error-message" id="error-email-inscription"></span>
+
+    <label for="password">Mot de passe :</label>
+    <input type="password" id="inscription-Password" name="password" required />
+    <span class="error-message" id="error-password-inscription"></span>
+
+    <label for="password-confirm">Confirmer le mot de passe :</label>
+    <input
+      type="password"
+      id="inscription-Password-confirm"
+      name="password-confirm"
+      required
+    />
+    <span class="error-message" id="error-password-confirm"></span>
+
+    <label for="adresse">Adresse :</label>
+    <input type="text" id="inscription-Adresse" name="adresse" required />
+    <span class="error-message" id="error-adresse"></span>
+
+    <label for="Postal">Code Postal :</label>
+    <input
+      type="text"
+      id="inscription-Postal"
+      name="Postal"
+      required
+      maxlength="5"
+    />
+    <span class="error-message" id="error-postal"></span>
+
+    <button type="submit">S'inscrire</button>
+  </form>
+</div>
