@@ -4,6 +4,7 @@
 
 function loadView(view) {
   // Ajoute l'extension .html si ce n'est pas un fichier PHP
+  const originalView = view;
   if (!view.endsWith(".php")) {
     view = view + ".html";
   }
@@ -15,6 +16,42 @@ function loadView(view) {
       if (exclure) {
         exclure.style.display = "none";
       }
+
+      // Charge dynamiquement le script associé à la vue
+      loadViewScript(originalView);
+    });
+}
+
+// Charge et exécute le script JS associé à une vue
+function loadViewScript(viewName) {
+  const scriptPath = `./assets/js/${viewName}.js`;
+
+  // Vérifie si le script existe et le charge
+  fetch(scriptPath, { method: 'HEAD' })
+    .then((response) => {
+      if (response.ok) {
+        // Supprime l'ancien script s'il existe
+        const existingScript = document.getElementById(`script-${viewName}`);
+        if (existingScript) {
+          existingScript.remove();
+        }
+
+        // Crée et ajoute le nouveau script
+        const script = document.createElement('script');
+        script.id = `script-${viewName}`;
+        script.src = scriptPath;
+        script.onload = function () {
+          // Appelle la fonction d'initialisation si elle existe
+          const initFunctionName = `init${viewName.charAt(0).toUpperCase() + viewName.slice(1)}`;
+          if (typeof window[initFunctionName] === 'function') {
+            window[initFunctionName]();
+          }
+        };
+        document.body.appendChild(script);
+      }
+    })
+    .catch(() => {
+      // Script n'existe pas, on ignore silencieusement
     });
 }
 

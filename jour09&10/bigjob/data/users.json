@@ -14,5 +14,13 @@
     "prenom": "Jean",
     "password": "test",
     "role": "user"
+  },
+  {
+    "id": 3,
+    "email": "moderator@laplateforme.io",
+    "nom": "Mod",
+    "prenom": "Erator",
+    "password": "test",
+    "role": "moderator"
   }
 ]

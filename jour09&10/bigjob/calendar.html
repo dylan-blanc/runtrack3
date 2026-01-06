@@ -1,0 +1,88 @@
+<!-- Calendar Partial View - Content only, no scripts -->
+<div class="p-1 p-lg-5" data-bs-theme="dark">
+    <div id="calendar" data-sidebar-addons="#sidebarAddons" data-topbar-addons="#topbarAddons"></div>
+
+    <div id="sidebarAddons" class="mt-4 card">
+        <div class="card-header">
+            <h6 class="text-uppercase text-center mb-0">sidebar addons</h6>
+        </div>
+        <div class="card-body d-flex flex-column">
+            <div class="form-check form-switch my-3">
+                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckTheme">
+                <label class="form-check-label" for="flexSwitchCheckTheme">light / dark</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="d-flex justify-content-end mb-3">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input name="title" type="text" class="form-control" id="floatingInputTitle"
+                            placeholder="appointment title">
+                        <label for="floatingInputTitle">Title</label>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center flex-nowrap mb-3">
+                        <div class="form-floating flex-fill">
+                            <input name="from_date" type="date" class="form-control" id="floatingInputDate"
+                                placeholder="date">
+                            <label for="floatingInputDate">From date</label>
+                        </div>
+                        <div class="mx-1"></div>
+                        <div class="form-floating flex-fill">
+                            <input name="to_date" type="date" class="form-control" id="floatingInputToDate"
+                                placeholder="date">
+                            <label for="floatingInputToDate">To date</label>
+                        </div>
+                    </div>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" name="allDay" role="switch"
+                            id="flexSwitchCheckDefaultAllDay">
+                        <label class="form-check-label" for="flexSwitchCheckDefaultAllDay">all day</label>
+                    </div>
+
+                    <div class="js-hide-on-all-day">
+                        <div class="d-flex justify-content-between align-items-center flex-nowrap mb-3">
+                            <div class="form-floating flex-fill">
+                                <input name="from_time" type="time" class="form-control" id="floatingInputTime"
+                                    placeholder="date">
+                                <label for="floatingInputTime">From time</label>
+                            </div>
+                            <div class="mx-1"></div>
+                            <div class="form-floating flex-fill">
+                                <input name="to_time" type="time" class="form-control" id="floatingInputToTime"
+                                    placeholder="date">
+                                <label for="floatingInputToTime">To time</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" style="height:300px" name="description"
+                            placeholder="Leave a comment here" id="floatingTextareaDescription"></textarea>
+                        <label for="floatingTextareaDescription">Description</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input name="link" type="text" class="form-control" id="floatingInputLink"
+                            placeholder="appointment link">
+                        <label for="floatingInputLink">Link</label>
+                    </div>
+
+                    <div class="d-flex justify-content-end align-items-center">
+                        <label for="floatingInputColor" class="d-none"></label>
+                        <input type="color" name="color" class="form-control me-2" id="floatingInputColor">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="calendarICS"></div>
+</div>
