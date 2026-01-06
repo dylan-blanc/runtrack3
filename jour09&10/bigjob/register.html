@@ -1,44 +1,64 @@
-<div id="inscription-form">
-  <form id="form-inscription">
-    <label for="Nom">Nom :</label>
-    <input type="text" id="Inscription-Nom" name="Nom" required />
-    <span class="error-message" id="error-nom"></span>
+<style>
+  .card-registration .select-input.form-control[readonly]:not([disabled]) {
+    font-size: 1rem;
+    line-height: 2.15;
+    padding-left: .75em;
+    padding-right: .75em;
+  }
 
-    <label for="Prenom">Prenom :</label>
-    <input type="text" id="Inscription-Prenom" name="Prenom" required />
-    <span class="error-message" id="error-prenom"></span>
+  .card-registration .select-arrow {
+    top: 13px;
+  }
+</style>
+<form method="post">
+  <div class="row">
+    <div class="col">
+      <div class="card card-registration">
+        <div class="row g-0">
+          <div class="col-xl-6 d-none d-xl-block">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
+              alt="Sample photo" class="img-fluid"
+              style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;">
+          </div>
+          <div class="col-xl-6">
+            <div class="card-body p-md-5">
+              <h4 class="mb-5 text-uppercase">Inscription</h4>
 
-    <label for="email">Email :</label>
-    <input type="text" id="inscription-Email" name="email" required />
-    <span class="error-message" id="error-email-inscription"></span>
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div data-mdb-input-init="" class="form-outline" data-mdb-input-initialized="true">
+                    <input type="text" id="form3Example1m" class="form-control form-control-lg">
+                    <label class="form-label" for="form3Example1m" style="margin-left: 0px;">Username</label>
+                    <div class="form-notch">
+                      <div class="form-notch-leading" style="width: 9px;"></div>
+                      <div class="form-notch-middle" style="width: 68.8px;"></div>
+                      <div class="form-notch-trailing"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-    <label for="password">Mot de passe :</label>
-    <input type="password" id="inscription-Password" name="password" required />
-    <span class="error-message" id="error-password-inscription"></span>
+              <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
+                <input type="text" id="form3Example97" class="form-control form-control-lg">
+                <label class="form-label" for="form3Example97" style="margin-left: 0px;">Email ID</label>
+                <div class="form-notch">
+                  <div class="form-notch-leading" style="width: 9px;"></div>
+                  <div class="form-notch-middle" style="width: 54.4px;"></div>
+                  <div class="form-notch-trailing"></div>
+                </div>
+              </div>
 
-    <label for="password-confirm">Confirmer le mot de passe :</label>
-    <input
-      type="password"
-      id="inscription-Password-confirm"
-      name="password-confirm"
-      required
-    />
-    <span class="error-message" id="error-password-confirm"></span>
+              <div class="d-flex justify-content-end pt-3">
+                <button type="button" data-mdb-button-init="" data-mdb-ripple-init="" class="btn btn-light btn-lg"
+                  data-mdb-button-initialized="true">Reset all</button>
+                <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
+                  class="btn btn-warning btn-lg ms-2" data-mdb-button-initialized="true">Submit form</button>
+              </div>
 
-    <label for="adresse">Adresse :</label>
-    <input type="text" id="inscription-Adresse" name="adresse" required />
-    <span class="error-message" id="error-adresse"></span>
-
-    <label for="Postal">Code Postal :</label>
-    <input
-      type="text"
-      id="inscription-Postal"
-      name="Postal"
-      required
-      maxlength="5"
-    />
-    <span class="error-message" id="error-postal"></span>
-
-    <button type="submit">S'inscrire</button>
-  </form>
-</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

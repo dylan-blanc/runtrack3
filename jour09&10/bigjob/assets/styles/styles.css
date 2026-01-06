@@ -1,5 +1,38 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden !important;
+  width: 100vw;
+  max-width: 100vw;
+}
+
+/* Le contenu principal prend tout l'espace disponible */
+header,
+.index-exclusion,
+#view-container {
+  flex-shrink: 0;
+}
+
+/* Fait en sorte que le contenu principal pousse le footer vers le bas */
+#view-container,
+.index-exclusion {
+  flex-grow: 1;
+}
+
+/* Le footer reste toujours en bas */
+footer {
+  margin-top: auto !important;
+  margin-bottom: 0 !important;
+  flex-shrink: 0;
 }

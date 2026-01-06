@@ -136,7 +136,7 @@ function initCalendar() {
                     break;
                 case 'updateOptions':
                     calendarElement.bsCalendar('updateOptions', {
-                        locale: 'fr-FR',
+                        locale: 'de-DE',
                     });
                     break;
                 default:
