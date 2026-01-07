@@ -27,10 +27,14 @@ async function loadAppointments() {
 // Fonction pour créer un appointment via l'API
 async function createAppointment(appointmentData) {
     try {
+        // Récupérer le rôle de l'utilisateur connecté
+        const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+        const userRole = user.role || null;
+
         const response = await fetch('api/appointments.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: 'create', ...appointmentData })
+            body: JSON.stringify({ action: 'create', userRole: userRole, ...appointmentData })
         });
         const data = await response.json();
         return data;
@@ -39,6 +43,71 @@ async function createAppointment(appointmentData) {
         return { success: false, message: 'Erreur de connexion' };
     }
 }
+
+// Fonction pour supprimer un appointment via l'API
+async function deleteAppointmentById(id) {
+    try {
+        // Récupérer le rôle de l'utilisateur connecté
+        const user = JSON.parse(sessionStorage.getItem('user') || '{}');
+        const userRole = user.role || null;
+
+        const response = await fetch('api/appointments.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'delete', id: id, userRole: userRole })
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        return { success: false, message: 'Erreur de connexion' };
+    }
+}
+
+// Variable pour stocker l'ID et le titre de l'appointment actuellement affiché dans la popup
+let currentViewingAppointmentId = null;
+let currentViewingAppointmentTitle = null;
+
+// Fonction pour demander à participer à un événement
+async function requestParticipation() {
+    try {
+        const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+
+        if (!user) {
+            alert('Vous devez être connecté pour demander à participer.');
+            return;
+        }
+
+        if (!currentViewingAppointmentId) {
+            console.error('Aucun appointment sélectionné');
+            return;
+        }
+
+        const response = await fetch('api/participations.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'request',
+                appointmentId: currentViewingAppointmentId,
+                appointmentTitle: currentViewingAppointmentTitle,
+                userId: user.id,
+                userEmail: user.email,
+                userName: `${user.nom} ${user.prenom}`
+            })
+        });
+        const data = await response.json();
+
+        if (data.success) {
+            alert('Demande de participation envoyée avec succès !');
+        } else {
+            alert(data.message || 'Erreur lors de la demande');
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+        alert('Erreur de connexion');
+    }
+}
+
 
 function initCalendar() {
     const select = $('#selectCountries');
@@ -97,6 +166,33 @@ function initCalendar() {
         url: url,
         debug: true,
         storeState: true,
+        onShowInfoWindow(appointment) {
+            // Stocker l'ID et le titre de l'appointment actuellement affiché
+            currentViewingAppointmentId = appointment.id;
+            currentViewingAppointmentTitle = appointment.title;
+
+            // Injecter le bouton "Demander à participer" si l'utilisateur est connecté
+            setTimeout(() => {
+                const user = JSON.parse(sessionStorage.getItem('user') || 'null');
+                if (user) {
+                    const infoModal = $('.modal.show .modal-body');
+                    // Vérifier si le bouton n'existe pas déjà
+                    if (infoModal.length && !infoModal.find('#btn-request-participation').length) {
+                        const linkBtn = infoModal.find('a.btn-primary');
+                        if (linkBtn.length) {
+                            // Ajouter à côté du bouton Link
+                            $('<button id="btn-request-participation" class="btn btn-success ms-2">Demander à participer</button>')
+                                .insertAfter(linkBtn)
+                                .on('click', requestParticipation);
+                        } else {
+                            // Ajouter à la fin du modal body
+                            infoModal.append('<button id="btn-request-participation" class="btn btn-success mt-3 w-100">Demander à participer</button>');
+                            infoModal.find('#btn-request-participation').on('click', requestParticipation);
+                        }
+                    }
+                }
+            }, 100);
+        },
         onAll(eventName, ...args) {
             console.log(eventName, ...args);
         }
@@ -236,6 +332,27 @@ function initCalendar() {
         }
     });
 
+    // Gestionnaire du bouton supprimer dans la popup d'info (data-remove)
+    $(document).on('click', '[data-remove]', async function () {
+        if (!currentViewingAppointmentId) {
+            console.error('Aucun appointment sélectionné');
+            return;
+        }
+
+        if (confirm('Êtes-vous sûr de vouloir supprimer cet appointment ?')) {
+            const result = await deleteAppointmentById(currentViewingAppointmentId);
+
+            if (result.success) {
+                // Supprimer du tableau local
+                appointments = appointments.filter(a => a.id !== currentViewingAppointmentId);
+                // Rafraîchir le calendrier
+                calendarElement.bsCalendar('refresh');
+                currentViewingAppointmentId = null;
+            } else {
+                alert(result.message || 'Erreur lors de la suppression');
+            }
+        }
+    });
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));

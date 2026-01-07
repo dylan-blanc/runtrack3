@@ -35,6 +35,139 @@ function getCurrentUserFromSession() {
     }
 }
 
+// === Chargement des participations ===
+
+let allParticipations = [];
+
+async function loadParticipations() {
+    try {
+        const user = getCurrentUserFromSession();
+        const response = await fetch('api/participations.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'list', userRole: user?.role })
+        });
+        const data = await response.json();
+        if (data.success) {
+            allParticipations = data.participations || [];
+            displayParticipations(allParticipations);
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+        const tbody = document.getElementById('participations-tbody');
+        if (tbody) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Erreur lors du chargement des demandes</td></tr>';
+        }
+    }
+}
+
+function displayParticipations(participations) {
+    const tbody = document.getElementById('participations-tbody');
+    if (!tbody) {
+        console.error('tbody participations-tbody non trouvé');
+        return;
+    }
+
+    if (participations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center">Aucune demande de participation</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = participations.map(p => `
+        <tr>
+            <td>${p.id}</td>
+            <td>${escapeHtml(p.appointmentTitle)}</td>
+            <td>${escapeHtml(p.userName)}</td>
+            <td>${escapeHtml(p.userEmail)}</td>
+            <td><span class="badge ${getStatusBadge(p.status)}">${formatStatus(p.status)}</span></td>
+            <td>${p.createdAt}</td>
+            <td>
+                ${p.status === 'pending' ? `
+                    <button class="btn btn-sm btn-success me-1" onclick="handleParticipationAction(${p.id}, 'accepted')">
+                        <i class="bi bi-check"></i> Accepter
+                    </button>
+                    <button class="btn btn-sm btn-danger" onclick="handleParticipationAction(${p.id}, 'rejected')">
+                        <i class="bi bi-x"></i> Refuser
+                    </button>
+                ` : '-'}
+            </td>
+        </tr>
+    `).join('');
+}
+
+function getStatusBadge(status) {
+    switch (status) {
+        case 'pending': return 'bg-warning text-dark';
+        case 'accepted': return 'bg-success';
+        case 'rejected': return 'bg-danger';
+        default: return 'bg-secondary';
+    }
+}
+
+function formatStatus(status) {
+    switch (status) {
+        case 'pending': return 'En attente';
+        case 'accepted': return 'Acceptée';
+        case 'rejected': return 'Refusée';
+        default: return status;
+    }
+}
+
+async function handleParticipationAction(id, status) {
+    try {
+        const user = getCurrentUserFromSession();
+        const response = await fetch('api/participations.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                action: 'update',
+                id: id,
+                status: status,
+                userRole: user?.role
+            })
+        });
+        const result = await response.json();
+
+        if (result.success) {
+            showNotification(`Demande ${status === 'accepted' ? 'acceptée' : 'refusée'} !`, 'success');
+            loadParticipations();
+        } else {
+            showNotification(result.message || 'Erreur lors de la mise à jour', 'danger');
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+        showNotification('Erreur de connexion', 'danger');
+    }
+}
+
+// === Navigation entre sections ===
+
+function switchSection(section) {
+    const participationsSection = document.getElementById('participations-section');
+    const usersSection = document.getElementById('users-section');
+    const mainTitle = document.getElementById('main-title');
+
+    // Mise à jour des liens actifs dans la sidebar
+    document.querySelectorAll('[data-section]').forEach(link => {
+        link.classList.remove('active');
+        if (link.dataset.section === section) {
+            link.classList.add('active');
+        }
+    });
+
+    if (section === 'users') {
+        participationsSection.style.display = 'none';
+        usersSection.style.display = 'block';
+        mainTitle.textContent = 'Gestion des Utilisateurs';
+        loadUsers();
+    } else {
+        participationsSection.style.display = 'block';
+        usersSection.style.display = 'none';
+        mainTitle.textContent = 'Dashboard';
+        loadParticipations();
+    }
+}
+
 // === Chargement des utilisateurs ===
 
 let allUsers = [];
@@ -198,12 +331,20 @@ function initBackoffice() {
         return;
     }
 
-    console.log('Accès autorisé, chargement des utilisateurs...');
+    console.log('Accès autorisé, chargement des demandes de participation...');
 
-    // Charger les utilisateurs
-    loadUsers();
+    // Charger les participations par défaut (Dashboard)
+    loadParticipations();
 
-    // Attacher l'événement au bouton de sauvegarde
+    // Attacher les événements de navigation sidebar
+    document.querySelectorAll('[data-section]').forEach(link => {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            switchSection(this.dataset.section);
+        });
+    });
+
+    // Attacher l'événement au bouton de sauvegarde de rôle
     const saveBtn = document.getElementById('save-role-btn');
     if (saveBtn) {
         saveBtn.addEventListener('click', saveRole);
@@ -213,3 +354,5 @@ function initBackoffice() {
 // Export pour le routeur
 window.initBackoffice = initBackoffice;
 window.openRoleModal = openRoleModal;
+window.handleParticipationAction = handleParticipationAction;
+window.switchSection = switchSection;

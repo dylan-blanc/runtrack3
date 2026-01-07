@@ -42,7 +42,7 @@
         "prenom": "testass",
         "adresse": "TESTrueDuTEST",
         "password": "VEVzdDEyMw==",
-        "role": "user"
+        "role": "moderator"
     },
     {
         "id": 6,
@@ -51,6 +51,15 @@
         "prenom": "azeaze",
         "adresse": "azeeza",
         "password": "VEVTVFRFU1Q=",
+        "role": "user"
+    },
+    {
+        "id": 7,
+        "email": "user@laplateforme.io",
+        "nom": "user",
+        "prenom": "user",
+        "adresse": "RueDeLutilisateur",
+        "password": "dXNlcg==",
         "role": "user"
     }
 ]

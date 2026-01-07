@@ -57,6 +57,19 @@ function findAppointmentById(int $id): ?array
     return null;
 }
 
+/**
+ * Vérifie si l'utilisateur a un rôle autorisé (admin ou moderator)
+ */
+function checkUserRole(array $data): void
+{
+    $allowedRoles = ['admin', 'moderator'];
+    $userRole = $data['userRole'] ?? null;
+
+    if (!$userRole || !in_array($userRole, $allowedRoles)) {
+        jsonResponse(false, 'Accès refusé. Seuls les administrateurs et modérateurs peuvent effectuer cette action.');
+    }
+}
+
 // === Actions ===
 
 function listAppointments(array $data): void
@@ -91,6 +104,9 @@ function listAppointments(array $data): void
 
 function createAppointment(array $data): void
 {
+    // Vérifier le rôle de l'utilisateur
+    checkUserRole($data);
+
     if (empty($data['title'])) {
         jsonResponse(false, 'Le titre est requis.');
     }
@@ -161,6 +177,9 @@ function updateAppointment(array $data): void
 
 function deleteAppointment(array $data): void
 {
+    // Vérifier le rôle de l'utilisateur
+    checkUserRole($data);
+
     if (empty($data['id'])) {
         jsonResponse(false, "L'ID de l'appointment est requis.");
     }

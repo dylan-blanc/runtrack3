@@ -1,0 +1,12 @@
+[
+    {
+        "id": 1,
+        "appointmentId": 1,
+        "appointmentTitle": "Test",
+        "userId": 7,
+        "userEmail": "user@laplateforme.io",
+        "userName": "user user",
+        "status": "rejected",
+        "createdAt": "2026-01-07 15:01:38"
+    }
+]
