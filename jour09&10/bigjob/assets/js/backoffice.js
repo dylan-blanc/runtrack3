@@ -8,9 +8,20 @@
 function checkAdminAccess() {
     const user = getCurrentUserFromSession();
     if (!user || (user.role !== 'admin' && user.role !== 'moderator')) {
-        // Rediriger vers la page d'accueil si pas admin/moderateur
-        alert('Accès refusé. Seuls les administrateurs et modérateurs peuvent accéder à cette page.');
-        window.location.href = 'index.html';
+        // Afficher un message d'erreur dans le conteneur
+        const viewContainer = document.getElementById('view-container');
+        if (viewContainer) {
+            viewContainer.innerHTML = `
+                <div class="container mt-5">
+                    <div class="alert alert-danger text-center" role="alert">
+                        <h4 class="alert-heading">Accès Refusé</h4>
+                        <p>Seuls les administrateurs et modérateurs peuvent accéder à cette page.</p>
+                        <hr>
+                        <p class="mb-0">Veuillez vous <a href="#" data-view="login" onclick="loadView('login'); return false;">connecter</a> avec un compte autorisé.</p>
+                    </div>
+                </div>
+            `;
+        }
         return false;
     }
     return true;
@@ -31,7 +42,8 @@ let selectedUserId = null;
 
 async function loadUsers() {
     try {
-        const response = await fetch('data/users.json');
+        // Ajouter un timestamp pour éviter le cache
+        const response = await fetch('data/users.json?t=' + Date.now());
         if (!response.ok) {
             throw new Error('Erreur lors du chargement des utilisateurs');
         }
@@ -48,7 +60,10 @@ async function loadUsers() {
 
 function displayUsers(users) {
     const tbody = document.getElementById('users-tbody');
-    if (!tbody) return;
+    if (!tbody) {
+        console.error('tbody users-tbody non trouvé');
+        return;
+    }
 
     if (users.length === 0) {
         tbody.innerHTML = '<tr><td colspan="7" class="text-center">Aucun utilisateur trouvé</td></tr>';
@@ -65,9 +80,7 @@ function displayUsers(users) {
             <td><span class="badge ${getRoleBadgeClass(user.role)}">${formatRoleName(user.role)}</span></td>
             <td>
                 <button class="btn btn-sm btn-outline-primary" 
-                        onclick="openRoleModal(${user.id}, '${escapeHtml(user.email)}', '${user.role}')"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#roleModal">
+                        onclick="openRoleModal(${user.id}, '${escapeHtml(user.email)}', '${user.role}')">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                         <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                         <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
@@ -109,6 +122,13 @@ function openRoleModal(userId, email, currentRole) {
     selectedUserId = userId;
     document.getElementById('modal-user-email').textContent = email;
     document.getElementById('role-select').value = currentRole;
+
+    // Ouvrir le modal manuellement
+    const modalElement = document.getElementById('roleModal');
+    if (modalElement && typeof bootstrap !== 'undefined') {
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
 }
 
 async function saveRole() {
@@ -130,8 +150,11 @@ async function saveRole() {
 
         if (result.success) {
             // Fermer le modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('roleModal'));
-            modal.hide();
+            const modalElement = document.getElementById('roleModal');
+            if (modalElement && typeof bootstrap !== 'undefined') {
+                const modal = bootstrap.Modal.getInstance(modalElement);
+                if (modal) modal.hide();
+            }
 
             // Recharger les utilisateurs
             await loadUsers();
@@ -166,11 +189,16 @@ function showNotification(message, type = 'info') {
 
 // === Initialisation ===
 
-function initAdmin() {
-    // Vérifier l'accès
+function initBackoffice() {
+    console.log('initBackoffice appelé');
+
+    // Vérifier l'accès - si refusé, ne pas continuer
     if (!checkAdminAccess()) {
+        console.log('Accès refusé au backoffice');
         return;
     }
+
+    console.log('Accès autorisé, chargement des utilisateurs...');
 
     // Charger les utilisateurs
     loadUsers();
@@ -182,10 +210,6 @@ function initAdmin() {
     }
 }
 
-// Auto-init
-document.readyState === 'loading'
-    ? document.addEventListener('DOMContentLoaded', initAdmin)
-    : initAdmin();
-
-// Export
+// Export pour le routeur
+window.initBackoffice = initBackoffice;
 window.openRoleModal = openRoleModal;

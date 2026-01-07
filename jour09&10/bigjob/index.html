@@ -12,6 +12,40 @@
 </head>
 
 <body>
+    <!-- DIV DE TEST - Informations utilisateur connecté -->
+    <div id="user-debug-bar" class="bg-warning text-dark p-2 small" style="font-family: monospace;">
+        <div class="container">
+            <strong>🔧 DEBUG USER:</strong>
+            <span id="debug-user-info">Aucun utilisateur connecté</span>
+        </div>
+    </div>
+    <script>
+        // Met à jour la barre de debug avec les infos utilisateur
+        function updateUserDebugBar() {
+            const debugInfo = document.getElementById('debug-user-info');
+            if (!debugInfo) return;
+
+            try {
+                const user = JSON.parse(sessionStorage.getItem('user'));
+                if (user) {
+                    debugInfo.innerHTML = `
+                        <strong>ID:</strong> ${user.id || 'N/A'} | 
+                        <strong>Nom:</strong> ${user.nom || 'N/A'} | 
+                        <strong>Prénom:</strong> ${user.prenom || 'N/A'} | 
+                    `;
+                } else {
+                    debugInfo.textContent = 'Aucun utilisateur connecté';
+                }
+            } catch (e) {
+                debugInfo.textContent = 'Erreur lecture session';
+            }
+        }
+
+        // Mise à jour au chargement et périodiquement
+        document.addEventListener('DOMContentLoaded', updateUserDebugBar);
+        setInterval(updateUserDebugBar, 1000);
+    </script>
+
     <header>
         <div class="px-3 py-2 text-bg-dark border-bottom">
             <div class="container">
@@ -22,8 +56,8 @@
                             <use xlink:href="#bootstrap"></use>
                         </svg> </a>
                     <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-                        <li> <a href="" class="nav-link text-secondary"> <svg class="bi d-block mx-auto mb-1"
-                                    width="24" height="24" aria-hidden="true">
+                        <li> <a href="" class="nav-link text-secondary"> <svg class="bi d-block mx-auto mb-1" width="24"
+                                    height="24" aria-hidden="true">
                                     <use xlink:href="#home"></use>
                                 </svg>
                                 Accueil
@@ -53,6 +87,11 @@
                                 Admin
                             </a> </li>
                     </ul>
+                    <!-- Bouton Déconnexion -->
+                    <button id="logout-btn" class="btn btn-outline-light btn-sm ms-3" onclick="logout()"
+                        style="display: none;">
+                        <i class="bi bi-box-arrow-right me-1"></i>Se Déconnecter
+                    </button>
                 </div>
             </div>
         </div>
@@ -80,6 +119,7 @@
         </ul>
     </footer>
 
+    <script src="./assets/js/auth.js"></script>
     <script src="./assets/js/script.js"></script>
     <script src="./vendor/components/jquery/jquery.min.js"></script>
     <script src="./vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

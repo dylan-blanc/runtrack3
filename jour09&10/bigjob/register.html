@@ -10,7 +10,7 @@
     top: 13px;
   }
 </style>
-<form method="post">
+<form method="post" id="register-form">
   <div class="row">
     <div class="col">
       <div class="card card-registration">
@@ -24,11 +24,14 @@
             <div class="card-body p-md-5">
               <h4 class="mb-5 text-uppercase">Inscription</h4>
 
+              <!-- Zone d'affichage des messages d'erreur/succès -->
+              <div id="register-alert-container"></div>
+
               <div class="row">
                 <div class="col-md-6 mb-4">
                   <div data-mdb-input-init="" class="form-outline" data-mdb-input-initialized="true">
-                    <input type="text" id="form3Example1m" class="form-control form-control-lg">
-                    <label class="form-label" for="form3Example1m" style="margin-left: 0px;">Username</label>
+                    <input type="text" id="register-Nom" name="nom" class="form-control form-control-lg" required>
+                    <label class="form-label" for="register-Nom" style="margin-left: 0px;">Nom</label>
                     <div class="form-notch">
                       <div class="form-notch-leading" style="width: 9px;"></div>
                       <div class="form-notch-middle" style="width: 68.8px;"></div>
@@ -36,11 +39,43 @@
                     </div>
                   </div>
                 </div>
+                <div class="col-md-6 mb-4">
+                  <div data-mdb-input-init="" class="form-outline" data-mdb-input-initialized="true">
+                    <input type="text" id="register-Prenom" name="prenom" class="form-control form-control-lg" required>
+                    <label class="form-label" for="register-Prenom" style="margin-left: 0px;">Prenom</label>
+                    <div class="form-notch">
+                      <div class="form-notch-leading" style="width: 9px;"></div>
+                      <div class="form-notch-middle" style="width: 68px;"></div>
+                      <div class="form-notch-trailing"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
-                <input type="text" id="form3Example97" class="form-control form-control-lg">
-                <label class="form-label" for="form3Example97" style="margin-left: 0px;">Email ID</label>
+                <input type="text" id="register-Adresse" name="adresse" class="form-control form-control-lg" required>
+                <label class="form-label" for="register-Adresse" style="margin-left: 0px;">Adresse</label>
+                <div class="form-notch">
+                  <div class="form-notch-leading" style="width: 9px;"></div>
+                  <div class="form-notch-middle" style="width: 55.2px;"></div>
+                  <div class="form-notch-trailing"></div>
+                </div>
+              </div>
+
+              <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
+                <input type="email" id="register-email" name="email" class="form-control form-control-lg"
+                  placeholder="@laplateforme.io" required>
+                <label class="form-label" for="register-email" style="margin-left: 0px;">Email</label>
+                <div class="form-notch">
+                  <div class="form-notch-leading" style="width: 9px;"></div>
+                  <div class="form-notch-middle" style="width: 54.4px;"></div>
+                  <div class="form-notch-trailing"></div>
+                </div>
+              </div>
+              <div data-mdb-input-init="" class="form-outline mb-4" data-mdb-input-initialized="true">
+                <input type="password" id="register-password" name="password" class="form-control form-control-lg"
+                  required>
+                <label class="form-label" for="register-password" style="margin-left: 0px;">Mot de passe</label>
                 <div class="form-notch">
                   <div class="form-notch-leading" style="width: 9px;"></div>
                   <div class="form-notch-middle" style="width: 54.4px;"></div>
@@ -49,10 +84,11 @@
               </div>
 
               <div class="d-flex justify-content-end pt-3">
-                <button type="button" data-mdb-button-init="" data-mdb-ripple-init="" class="btn btn-light btn-lg"
-                  data-mdb-button-initialized="true">Reset all</button>
-                <button type="button" data-mdb-button-init="" data-mdb-ripple-init=""
-                  class="btn btn-warning btn-lg ms-2" data-mdb-button-initialized="true">Submit form</button>
+                <button type="reset" data-mdb-button-init="" data-mdb-ripple-init="" class="btn btn-light btn-lg"
+                  data-mdb-button-initialized="true">Réinitialiser</button>
+                <button type="submit" data-mdb-button-init="" data-mdb-ripple-init=""
+                  class="btn btn-warning btn-lg ms-2" data-mdb-button-initialized="true"
+                  id="register-btn">S'inscrire</button>
               </div>
 
             </div>

@@ -1,26 +1,56 @@
 [
-  {
-    "id": 1,
-    "email": "admin@laplateforme.io",
-    "nom": "Min",
-    "prenom": "Ad",
-    "password": "test",
-    "role": "admin"
-  },
-  {
-    "id": 2,
-    "email": "jean@laplateforme.io",
-    "nom": "Elly",
-    "prenom": "Jean",
-    "password": "test",
-    "role": "user"
-  },
-  {
-    "id": 3,
-    "email": "moderator@laplateforme.io",
-    "nom": "Mod",
-    "prenom": "Erator",
-    "password": "test",
-    "role": "moderator"
-  }
+    {
+        "id": 1,
+        "email": "admin@laplateforme.io",
+        "nom": "Min",
+        "prenom": "Ad",
+        "adresse": "1 Rue Admin",
+        "password": "dGVzdA==",
+        "role": "admin"
+    },
+    {
+        "id": 2,
+        "email": "jean@laplateforme.io",
+        "nom": "Elly",
+        "prenom": "Jean",
+        "adresse": "2 Rue Jean",
+        "password": "dGVzdA==",
+        "role": "user"
+    },
+    {
+        "id": 3,
+        "email": "moderator@laplateforme.io",
+        "nom": "Mod",
+        "prenom": "Erator",
+        "adresse": "3 Rue Moderator",
+        "password": "dGVzdA==",
+        "role": "moderator"
+    },
+    {
+        "id": 4,
+        "email": "testuser@laplateforme.io",
+        "nom": "TestUser",
+        "prenom": "TestPrenom",
+        "adresse": "123 Test Street",
+        "password": "dGVzdDEyMw==",
+        "role": "user"
+    },
+    {
+        "id": 5,
+        "email": "testa@laplateforme.io",
+        "nom": "testass",
+        "prenom": "testass",
+        "adresse": "TESTrueDuTEST",
+        "password": "VEVzdDEyMw==",
+        "role": "user"
+    },
+    {
+        "id": 6,
+        "email": "testatatat@laplateforme.io",
+        "nom": "azeeza",
+        "prenom": "azeaze",
+        "adresse": "azeeza",
+        "password": "VEVTVFRFU1Q=",
+        "role": "user"
+    }
 ]

@@ -2,30 +2,71 @@
  * Calendar initialization script
  * Loaded dynamically when the calendar view is displayed
  */
+
+// Variable globale pour stocker les appointments
+let appointments = [];
+
+// Fonction pour charger les appointments depuis l'API
+async function loadAppointments() {
+    try {
+        const response = await fetch('api/appointments.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'list' })
+        });
+        const data = await response.json();
+        if (data.success) {
+            appointments = data.appointments || [];
+        }
+    } catch (error) {
+        console.error('Erreur lors du chargement des appointments:', error);
+        appointments = [];
+    }
+}
+
+// Fonction pour créer un appointment via l'API
+async function createAppointment(appointmentData) {
+    try {
+        const response = await fetch('api/appointments.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'create', ...appointmentData })
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Erreur lors de la création:', error);
+        return { success: false, message: 'Erreur de connexion' };
+    }
+}
+
 function initCalendar() {
     const select = $('#selectCountries');
     const selectSubdivision = $('#selectSubdivision');
     select.on('change', function () {
         selectSubdivision.empty();
-        $.bsCalendar.utils.openHolidayApi.getSubdivisions($(this).val(), 'DE').then(subdivisions => {
+        $.bsCalendar.utils.openHolidayApi.getSubdivisions($(this).val(), 'FR').then(subdivisions => {
             subdivisions.forEach(subdivision => {
                 selectSubdivision.append(`<option value="${subdivision.shortName}">${subdivision.name[0].text}</option>`)
             })
         });
     });
 
-    $.bsCalendar.utils.openHolidayApi.getCountries('DE').then(countries => {
+    $.bsCalendar.utils.openHolidayApi.getCountries('FR').then(countries => {
         countries.forEach(country => {
             select.append(`<option value="${country.isoCode}">${country.name[0].text}</option>`)
         })
-        select.val('DE');
+        select.val('FR');
         select.trigger('change')
     });
 
+    // Charger les appointments au démarrage
+    loadAppointments();
+
 
     $.bsCalendar.setDefaults({
-        title: '<span class="h4 text-uppercase mb-0">$.fn.bsCalendar</span>',
-        locale: 'de-DE',
+        title: '<span class="h6 text-uppercase mb-0">Calendrier</span>',
+        locale: 'fr-FR',
         startWeekOnSunday: false,
         navigateOnWheel: false,
         hourSlots: {
@@ -50,7 +91,7 @@ function initCalendar() {
                 id: 'example-calendar-3',
                 title: 'Sports',
                 color: 'success',
-                active: true
+                active: false
             }
         ],
         url: url,
@@ -136,7 +177,7 @@ function initCalendar() {
                     break;
                 case 'updateOptions':
                     calendarElement.bsCalendar('updateOptions', {
-                        locale: 'de-DE',
+                        locale: 'fr-FR',
                     });
                     break;
                 default:
@@ -151,6 +192,50 @@ function initCalendar() {
                 }
             });
         })
+
+    // Gestionnaire du bouton "Créer" dans la modal
+    $('#btnCreateAppointment').on('click', async function () {
+        const title = modal.find('input[name="title"]').val();
+        const fromDate = modal.find('input[name="from_date"]').val();
+        const toDate = modal.find('input[name="to_date"]').val();
+        const fromTime = modal.find('input[name="from_time"]').val() || '00:00';
+        const toTime = modal.find('input[name="to_time"]').val() || '23:59';
+        const allDay = modal.find('input[name="allDay"]').prop('checked');
+        const description = modal.find('textarea[name="description"]').val();
+        const color = modal.find('input[name="color"]').val();
+        const link = modal.find('input[name="link"]').val();
+
+        if (!title) {
+            alert('Le titre est requis.');
+            return;
+        }
+        if (!fromDate || !toDate) {
+            alert('Les dates sont requises.');
+            return;
+        }
+
+        const appointmentData = {
+            title: title,
+            start: `${fromDate} ${fromTime}:00`,
+            end: `${toDate} ${toTime}:00`,
+            allDay: allDay,
+            description: description,
+            color: color,
+            link: link
+        };
+
+        const result = await createAppointment(appointmentData);
+
+        if (result.success) {
+            // Ajouter au tableau local et rafraîchir le calendrier
+            appointments.push(result.appointment);
+            calendarElement.bsCalendar('refresh');
+            modal.modal('hide');
+        } else {
+            alert(result.message || 'Erreur lors de la création');
+        }
+    });
+
 
     function sleep(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
@@ -178,6 +263,8 @@ function initCalendar() {
     }
 
     async function url(query) {
+        // Recharger les appointments depuis l'API pour avoir les données à jour
+        await loadAppointments();
         await sleep(Math.floor(Math.random()));
 
         return new Promise((resolve, reject) => {
@@ -196,11 +283,11 @@ function initCalendar() {
                     return resolve(generateDates(query.year));
                 }
 
-                const appointments = generateRandomAppointments(
-                    (fromDate || new Date('1970-01-01T00:00:00')).toISOString(),
-                    (toDate || new Date('9999-12-31T23:59:59')).toISOString(),
-                    query.view
-                );
+                // const appointments = generateRandomAppointments(
+                //     (fromDate || new Date('1970-01-01T00:00:00')).toISOString(),
+                //     (toDate || new Date('9999-12-31T23:59:59')).toISOString(),
+                //     query.view
+                // );
 
                 const filteredAppointments = appointments.filter(appointment => {
                     const appointmentStart = new Date(appointment.start);
@@ -278,94 +365,94 @@ function initCalendar() {
         return staticAppointments;
     }
 
-    function generateRandomAppointments(start, end, view = null) {
-        const colors = [
-            'primary opacity-75 gradient', 'danger opacity-75 gradient', 'info gradient  opacity-75', 'warning gradient  opacity-75',
-            'secondary opacity-75 gradient', 'dark opacity-75 gradient', 'light gradient  opacity-75', 'success gradient  opacity-75',
-        ];
+    // function generateRandomAppointments(start, end, view = null) {
+    //     const colors = [
+    //         'primary opacity-75 gradient', 'danger opacity-75 gradient', 'info gradient  opacity-75', 'warning gradient  opacity-75',
+    //         'secondary opacity-75 gradient', 'dark opacity-75 gradient', 'light gradient  opacity-75', 'success gradient  opacity-75',
+    //     ];
 
-        const appointments = [];
-        const startDate = new Date(start);
-        const endDate = new Date(end);
+    //     const appointments = [];
+    //     const startDate = new Date(start);
+    //     const endDate = new Date(end);
 
-        if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
-            throw new Error("Ungültiges Start- oder Enddatum übergeben.");
-        }
+    //     if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    //         throw new Error("Ungültiges Start- oder Enddatum übergeben.");
+    //     }
 
-        if (endDate <= startDate) {
-            throw new Error("Das Enddatum muss nach dem Startdatum liegen.");
-        }
+    //     if (endDate <= startDate) {
+    //         throw new Error("Das Enddatum muss nach dem Startdatum liegen.");
+    //     }
 
-        let count;
-        switch (view) {
-            case 'month':
-            case 'week':
-            case 'day':
-                count = Math.floor(Math.random() * 21);
-                break;
-            case 'year':
-                count = Math.floor(Math.random() * 200);
-                break;
-            default:
-                count = Math.floor(Math.random() * 120);
-        }
+    //     let count;
+    //     switch (view) {
+    //         case 'month':
+    //         case 'week':
+    //         case 'day':
+    //             count = Math.floor(Math.random() * 21);
+    //             break;
+    //         case 'year':
+    //             count = Math.floor(Math.random() * 200);
+    //             break;
+    //         default:
+    //             count = Math.floor(Math.random() * 120);
+    //     }
 
-        for (let i = 0; i < count; i++) {
-            const startMinutesOptions = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
-            const randomStartTime = new Date(
-                startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime())
-            );
+    //     for (let i = 0; i < count; i++) {
+    //         const startMinutesOptions = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+    //         const randomStartTime = new Date(
+    //             startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime())
+    //         );
 
-            randomStartTime.setMinutes(
-                startMinutesOptions[Math.floor(Math.random() * startMinutesOptions.length)]
-            );
-            randomStartTime.setSeconds(0);
-            randomStartTime.setMilliseconds(0);
+    //         randomStartTime.setMinutes(
+    //             startMinutesOptions[Math.floor(Math.random() * startMinutesOptions.length)]
+    //         );
+    //         randomStartTime.setSeconds(0);
+    //         randomStartTime.setMilliseconds(0);
 
-            const durationOptions = [45, 60, 90, 120, 240, 500];
-            const randomDuration = durationOptions[Math.floor(Math.random() * durationOptions.length)];
+    //         const durationOptions = [45, 60, 90, 120, 240, 500];
+    //         const randomDuration = durationOptions[Math.floor(Math.random() * durationOptions.length)];
 
-            const randomEndTime = new Date(randomStartTime.getTime() + randomDuration * 60000);
+    //         const randomEndTime = new Date(randomStartTime.getTime() + randomDuration * 60000);
 
-            if (randomEndTime > endDate) {
-                continue;
-            }
+    //         if (randomEndTime > endDate) {
+    //             continue;
+    //         }
 
-            const description = `This is a randomly generated appointment description. The appointment is meant to provide useful information about the scheduled event. Details such as the purpose of the appointment, participants, or special instructions can typically be included here. Appointment #${i + 1} is designed to showcase how descriptions enhance context.`;
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const link = 'https://github.com/ThomasDev-de/bs-calendar';
+    //         const description = `This is a randomly generated appointment description. The appointment is meant to provide useful information about the scheduled event. Details such as the purpose of the appointment, participants, or special instructions can typically be included here. Appointment #${i + 1} is designed to showcase how descriptions enhance context.`;
+    //         const color = colors[Math.floor(Math.random() * colors.length)];
+    //         const link = 'https://github.com/ThomasDev-de/bs-calendar';
 
-            let location;
-            const randomChoice = Math.floor(Math.random() * 3);
-            if (randomChoice === 0) {
-                location = `Location ${Math.floor(Math.random() * 100) + 1}`;
-            } else if (randomChoice === 1) {
-                location = [
-                    `Room ${Math.floor(Math.random() * 10) + 1}`,
-                    `Building ${Math.floor(Math.random() * 5) + 1}`
-                ];
-            } else {
-                location = null;
-            }
+    //         let location;
+    //         const randomChoice = Math.floor(Math.random() * 3);
+    //         if (randomChoice === 0) {
+    //             location = `Location ${Math.floor(Math.random() * 100) + 1}`;
+    //         } else if (randomChoice === 1) {
+    //             location = [
+    //                 `Room ${Math.floor(Math.random() * 10) + 1}`,
+    //                 `Building ${Math.floor(Math.random() * 5) + 1}`
+    //             ];
+    //         } else {
+    //             location = null;
+    //         }
 
-            const allDay = i % 21 === 0;
-            const appointment = {
-                id: i + 1,
-                title: `Appointment ${i + 1}`,
-                description: description,
-                start: randomStartTime.toISOString().replace('T', ' ').substring(0, 19),
-                end: randomEndTime.toISOString().replace('T', ' ').substring(0, 19),
-                allDay: allDay,
-                color: color,
-                link: link,
-                location: location
-            };
+    //         const allDay = i % 21 === 0;
+    //         const appointment = {
+    //             id: i + 1,
+    //             title: `Appointment ${i + 1}`,
+    //             description: description,
+    //             start: randomStartTime.toISOString().replace('T', ' ').substring(0, 19),
+    //             end: randomEndTime.toISOString().replace('T', ' ').substring(0, 19),
+    //             allDay: allDay,
+    //             color: color,
+    //             link: link,
+    //             location: location
+    //         };
 
-            appointments.push(appointment);
-        }
+    //         appointments.push(appointment);
+    //     }
 
-        return appointments;
-    }
+    //     return appointments;
+    // }
 
 
     $('#flexSwitchCheckDefaultAllDay').prop('checked', false)
@@ -374,10 +461,15 @@ function initCalendar() {
             $('.js-hide-on-all-day').toggle(!isAllDay);
         });
 
-    $('#flexSwitchCheckTheme').prop('checked', false)
+    // Initialiser le thème dark sur l'élément html au chargement
+    const htmlElement = $('html');
+    const initialTheme = $('[data-bs-theme]').first().attr('data-bs-theme') || 'light';
+    htmlElement.attr('data-bs-theme', initialTheme);
+
+    // Synchroniser le checkbox avec le thème initial (checked = dark)
+    $('#flexSwitchCheckTheme').prop('checked', initialTheme === 'dark')
         .on('change', function () {
-            const htmlElement = $('html');
-            const theme = htmlElement.attr('data-bs-theme') === 'light' ? 'dark' : 'light';
+            const theme = $(this).prop('checked') ? 'dark' : 'light';
             htmlElement.attr('data-bs-theme', theme);
         });
 
@@ -428,7 +520,7 @@ CATEGORIES:Agile,Daily
 END:VEVENT
 END:VCALENDAR`;
 
-    const appointments = $.bsCalendar.utils.convertIcsToAppointments(icsString);
+    // const appointments = $.bsCalendar.utils.convertIcsToAppointments(icsString);
 
     $('#calendarICS').bsCalendar({
         url: () => Promise.resolve(appointments)

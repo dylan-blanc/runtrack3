@@ -1,3 +1,24 @@
 .nav-item {
     background-color: #212529;
 }
+
+/* Empêcher le scrolling horizontal dans la sidebar */
+.sidebar {
+    overflow-x: hidden;
+}
+
+.sidebar .offcanvas-body {
+    overflow-x: hidden;
+}
+
+/* Tronquer le texte des liens trop longs */
+.sidebar .nav-link {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sidebar .nav-link span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
