@@ -83,86 +83,54 @@ document.addEventListener("DOMContentLoaded", function () {
 let Alarme = [];
 
 function ajouterAlarme() {
-    const inputs = document.querySelectorAll("#Reveil input");
+    const inputTime = document.querySelector("#Reveil input[type='time']");
+    const inputText = document.querySelector("#Reveil input[type='text']");
     const ul = document.getElementById("AfficherAlarme");
 
-    // Récupérer les valeurs de tous les inputs
-    let valeurs = [];
-    inputs.forEach(input => {
-        if (input.value) valeurs.push(input.value);
-    });
+    const heureAlarme = inputTime.value;
+    const messageAlarme = inputText.value;
 
-    if (valeurs.length > 0) {
-        const alarmeTexte = valeurs.join(" - ");
-        Alarme.push(alarmeTexte);
+    if (heureAlarme) {
+        // Stocker l'heure et le message séparément
+        const alarmeObj = {
+            heure: heureAlarme,
+            message: messageAlarme,
+            declenchee: false
+        };
+        Alarme.push(alarmeObj);
+
+        // Afficher uniquement l'heure (sans le message)
         const li = document.createElement("li");
-        li.textContent = `Alarme n° ${Alarme.length} : ${alarmeTexte}`;
+        li.textContent = `Alarme n°${Alarme.length} ${heureAlarme}`;
         ul.appendChild(li);
 
-        // Réinitialiser tous les inputs
-        inputs.forEach(input => input.value = "");
+        // Réinitialiser les inputs
+        inputTime.value = "";
+        inputText.value = "";
     }
 }
 
-function initFormatageTempsReel() {
-    const inputText = document.querySelector("#Reveil input[type='text']");
-    if (inputText) {
-        inputText.placeholder = "HH:MM";
-        inputText.maxLength = 5; // "HH:MM" = 5 caractères
+function verifierAlarmes() {
+    const maintenant = new Date();
+    const heureActuelle = `${formatNumber(maintenant.getHours())}:${formatNumber(maintenant.getMinutes())}`;
 
-        inputText.addEventListener("input", function (e) {
-            // Garder uniquement les chiffres
-            let chiffres = this.value.replace(/\D/g, "");
-
-            // Limiter à 4 chiffres max
-            chiffres = chiffres.substring(0, 4);
-
-            // Valider et corriger les heures (00-23)
-            if (chiffres.length >= 1) {
-                let h1 = parseInt(chiffres[0], 10);
-                // Si premier chiffre > 2, on ajoute un 0 devant
-                if (h1 > 2) {
-                    chiffres = "0" + chiffres;
-                    chiffres = chiffres.substring(0, 4);
-                }
-            }
-            if (chiffres.length >= 2) {
-                let heures = parseInt(chiffres.substring(0, 2), 10);
-                if (heures > 23) {
-                    chiffres = "23" + chiffres.substring(2);
-                }
-            }
-
-            // Valider et corriger les minutes (00-59)
-            if (chiffres.length >= 3) {
-                let m1 = parseInt(chiffres[2], 10);
-                // Si premier chiffre des minutes > 5, on le limite à 5
-                if (m1 > 5) {
-                    chiffres = chiffres.substring(0, 2) + "5" + (chiffres[3] || "");
-                }
-            }
-            if (chiffres.length >= 4) {
-                let minutes = parseInt(chiffres.substring(2, 4), 10);
-                if (minutes > 59) {
-                    chiffres = chiffres.substring(0, 2) + "59";
-                }
-            }
-
-            // Formater en HH:MM
-            if (chiffres.length > 2) {
-                this.value = chiffres.substring(0, 2) + ":" + chiffres.substring(2);
+    Alarme.forEach((alarme, index) => {
+        if (!alarme.declenchee && alarme.heure === heureActuelle) {
+            alarme.declenchee = true;
+            if (alarme.message) {
+                alert(`🔔 Alarme n°${index + 1} : ${alarme.message}`);
             } else {
-                this.value = chiffres;
+                alert(`🔔 Alarme n°${index + 1} !`);
             }
-        });
-    }
+        }
+    });
 }
+
+// Lancer la vérification des alarmes toutes les secondes
+setInterval(verifierAlarmes, 1000);
 
 document.getElementById("btnAjouterAlarme").addEventListener("click", ajouterAlarme);
 
-document.addEventListener("DOMContentLoaded", function () {
-    initFormatageTempsReel();
-});
 
 /*
 * ************************* Chronometre ***********************************
@@ -250,6 +218,12 @@ document.getElementById("btnMarcheArret").addEventListener("click", function () 
 });
 
 
+/*
+* ************************* Minuteur ***********************************
+*/
+
+
+
 
 
 
@@ -258,8 +232,4 @@ document.getElementById("btnMarcheArret").addEventListener("click", function () 
 // const heureFR = maintenant.toLocaleString("fr-FR", {
 //     timezone: "Europe/Paris"
 // });
-
-// const intervalid = setInterval(function () {
-//     console.log("tick");
-// }, 1000);
 
