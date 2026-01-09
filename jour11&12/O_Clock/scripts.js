@@ -222,10 +222,100 @@ document.getElementById("btnMarcheArret").addEventListener("click", function () 
 * ************************* Minuteur ***********************************
 */
 
+// Variables du minuteur
+let minuteurSecondes = 0;       // Temps total en secondes
+let minuteurIntervalId = null;  // ID de l'intervalle
+let minuteurEnMarche = false;   // État du minuteur
 
+// Afficher le temps du minuteur au format HH:MM:SS
+function afficherMinuteur() {
+    const heures = Math.floor(minuteurSecondes / 3600);
+    const minutes = Math.floor((minuteurSecondes % 3600) / 60);
+    const secondes = minuteurSecondes % 60;
 
+    const elementMinuteur = document.getElementById("AfficherMinuteur");
+    if (elementMinuteur) {
+        elementMinuteur.innerHTML = `${formatNumber(heures)}:${formatNumber(minutes)}:${formatNumber(secondes)}`;
+    }
+}
 
+// Mettre à jour l'affichage quand l'utilisateur entre un temps dans les inputs
+function mettreAJourDepuisInput() {
+    const inputMinutes = document.getElementById("MinuteurMinutes");
+    const inputSecondes = document.getElementById("MinuteurSecondes");
 
+    const minutes = parseInt(inputMinutes.value) || 0;
+    const secondes = parseInt(inputSecondes.value) || 0;
+
+    minuteurSecondes = (minutes * 60) + secondes;
+    afficherMinuteur();
+}
+
+// Démarrer le décompte du minuteur
+function demarrerMinuteur() {
+    if (minuteurSecondes <= 0) return; // Ne pas démarrer si temps à 0
+
+    minuteurEnMarche = true;
+    const btnMinuteur = document.getElementById("btnMinuteurMarcheArret");
+    btnMinuteur.innerHTML = '<i class="fa-solid fa-rotate"></i>Réinitialiser';
+
+    minuteurIntervalId = setInterval(function () {
+        minuteurSecondes--;
+        afficherMinuteur();
+
+        if (minuteurSecondes <= 0) {
+            arreterMinuteur();
+            alert("Temps épuisé");
+        }
+    }, 1000);
+}
+
+// Arrêter le minuteur
+function arreterMinuteur() {
+    minuteurEnMarche = false;
+    clearInterval(minuteurIntervalId);
+    minuteurIntervalId = null;
+}
+
+// Réinitialiser le minuteur
+function reinitialiserMinuteur() {
+    arreterMinuteur();
+    minuteurSecondes = 0;
+    afficherMinuteur();
+    document.getElementById("MinuteurMinutes").value = "";
+    document.getElementById("MinuteurSecondes").value = "";
+
+    const btnMinuteur = document.getElementById("btnMinuteurMarcheArret");
+    btnMinuteur.innerHTML = '<i class="fa-solid fa-play"></i>Demarrer';
+}
+
+// Ajouter 1 minute au minuteur
+function incrementerMinuteur() {
+    minuteurSecondes += 60;
+    afficherMinuteur();
+}
+
+// Retirer 1 minute du minuteur (minimum 0)
+function decrementerMinuteur() {
+    minuteurSecondes = Math.max(0, minuteurSecondes - 60);
+    afficherMinuteur();
+}
+
+// Événements du minuteur
+document.getElementById("MinuteurMinutes").addEventListener("input", mettreAJourDepuisInput);
+document.getElementById("MinuteurSecondes").addEventListener("input", mettreAJourDepuisInput);
+
+document.getElementById("btnFlecheHaut").addEventListener("click", incrementerMinuteur);
+
+document.getElementById("btnFlecheBas").addEventListener("click", decrementerMinuteur);
+
+document.getElementById("btnMinuteurMarcheArret").addEventListener("click", function () {
+    if (minuteurEnMarche) {
+        reinitialiserMinuteur();
+    } else {
+        demarrerMinuteur();
+    }
+});
 
 
 

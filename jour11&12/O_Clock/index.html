@@ -35,10 +35,13 @@
             </div>
 
             <div id="Minuteur" style="display: none;">
+                <div id="AfficherMinuteur">00:00:00</div>
                 <button class="fleche" id="btnFlecheHaut"><i class="fa-solid fa-arrow-up"></i></button>
                 <button class="fleche" id="btnFlecheBas"><i class="fa-solid fa-arrow-down"></i></button>
-                <input type="text" id="TempsMinuteur">
-                <button class="btn2" id="btnMarcheArret"><i class="fa-solid fa-play"></i>Demarrer</button>
+                <input type="number" id="MinuteurMinutes" min="0" max="59" placeholder="MM" style="width: 50px;">
+                <span>:</span>
+                <input type="number" id="MinuteurSecondes" min="0" max="59" placeholder="SS" style="width: 50px;">
+                <button class="btn2" id="btnMinuteurMarcheArret"><i class="fa-solid fa-play"></i>Demarrer</button>
             </div>
 
             <div id="Reveil" style="display: none;">
