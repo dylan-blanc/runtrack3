@@ -1,6 +1,6 @@
 
 /*
-* *********************** AFFICHER / CACHER *********************************
+* *********************** AFFICHER / CACHER Element HTML *********************************
 */
 
 function afficherSection(sectionId) {
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 /*
-* ***********************************************************
+* ************************ Horloge et formatage affichage ***********************************
 */
 
 
@@ -63,7 +63,7 @@ function AfficherHeure() {
     }
     const ElementAlarmeHeure = document.getElementById("AlarmeHeure");
     if (ElementAlarmeHeure) {
-        ElementAllarmeHeure.innerHTML = heureFormatee;
+        ElementAlarmeHeure.innerHTML = heureFormatee;
     }
 }
 
@@ -74,17 +74,18 @@ function demarrerHorloge() {
 
 document.addEventListener("DOMContentLoaded", function () {
     demarrerHorloge();
+    afficherTemps();
 });
 
 /*
-* ***********************************************************
+* **************************** REVEIL *************************************
 */
 
 
 
 
 /*
-* ***********************************************************
+* ************************* Chronometre ***********************************
 */
 
 let tempsEcoule = 0;
@@ -92,70 +93,85 @@ let intervalId = null;
 let enMarche = false;
 let tours = [];
 function toggleChrono() {
-if (enMarche) {
-arreter();
-} else {
-demarrer();
-}
+    if (enMarche) {
+        arreter();
+    } else {
+        demarrer();
+    }
 }
 function demarrer() {
-enMarche = true;
-intervalId = setInterval(function() {
-tempsEcoule++;
-afficherTemps(tempsEcoule);
-}, 1000);
-document.getElementById("btnMarcheArret").textContent = "Arrêter";
+    enMarche = true;
+    intervalId = setInterval(function () {
+        tempsEcoule += 10; // Ajoute 10ms à chaque tick
+        afficherTemps();
+    }, 10); // Intervalle de 10ms pour les centièmes
+    document.getElementById("btnMarcheArret").textContent = "Arrêter";
 }
 function arreter() {
-enMarche = false;
-clearInterval(intervalId);
-document.getElementById("btnMarcheArret").textContent = "Démarrer";
+    enMarche = false;
+    clearInterval(intervalId);
+    document.getElementById("btnMarcheArret").textContent = "Démarrer";
 }
 
 function enregistrerTour() {
-tours.push(tempsEcoule);
-ajouterTour();
+    tours.push(tempsEcoule);
+    ajouterTour();
 }
 
-
-
-
 function afficherTemps() {
+    const totalSecondes = Math.floor(tempsEcoule / 1000);
+    const heures = Math.floor(totalSecondes / 3600);
+    const minutes = Math.floor((totalSecondes % 3600) / 60);
+    const secondes = totalSecondes % 60;
+    const millisecondes = Math.floor((tempsEcoule % 1000) / 10); // Centièmes de seconde
+
     const elementChrono = document.getElementById("AfficherChrono");
     if (elementChrono) {
-        elementChrono.innerHTML = `${formatNumber(ChronoHeure)}:${formatNumber(ChronoMinutes)}:${formatNumber(ChronoSecondes)}:${formatNumber(ChronoMilliseconds)}`;
+        elementChrono.innerHTML = `${formatNumber(heures)}:${formatNumber(minutes)}:${formatNumber(secondes)}:${formatNumber(millisecondes)}`;
     }
 }
 
-document.getElementById("btnMarcheArret").addEventListener("click", function () {
-    demarrerChrono();
-});
-
 document.getElementById("btnReset").addEventListener("click", function () {
-    ChronoHeure = 0;
-    ChronoMinutes = 0;
-    ChronoSecondes = 0;
-    ChronoMilliseconds = 0;
-    clearInterval(ChronoInterval);
-    ChronoInterval = null;
-    updateChronoDisplay();
+    tempsEcoule = 0;
+    enMarche = false;
+    clearInterval(intervalId);
+    intervalId = null;
+    afficherTemps();
+    document.getElementById("btnMarcheArret").textContent = "Démarrer";
+    tours = [];
+    const elementTours = document.getElementById("AfficherTour");
+    if (elementTours) {
+        elementTours.innerHTML = "";
+    }
 });
-
 
 
 function ajouterTour() {
+    const totalSecondes = Math.floor(tempsEcoule / 1000);
+    const heures = Math.floor(totalSecondes / 3600);
+    const minutes = Math.floor((totalSecondes % 3600) / 60);
+    const secondes = totalSecondes % 60;
+    const millisecondes = Math.floor((tempsEcoule % 1000) / 10);
+
     const elementTours = document.getElementById("AfficherTour");
     if (elementTours) {
         const li = document.createElement("li");
-        li.textContent = `Tour n° ${tours.length} : ${formatNumber(ChronoHeure)}:${formatNumber(ChronoMinutes)}:${formatNumber(ChronoSecondes)}:${formatNumber(ChronoMilliseconds)}`;
+        li.textContent = `Tour n° ${tours.length} : ${formatNumber(heures)}:${formatNumber(minutes)}:${formatNumber(secondes)}:${formatNumber(millisecondes)}`;
         elementTours.appendChild(li);
-        NombreTour++;
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  toggleChrono();
+document.getElementById("btnTour").addEventListener("click", function () {
+    enregistrerTour();
 });
+
+document.getElementById("btnMarcheArret").addEventListener("click", function () {
+    toggleChrono();
+});
+
+
+
+
 
 
 
