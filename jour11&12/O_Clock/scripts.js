@@ -117,6 +117,37 @@ function initFormatageTempsReel() {
             // Limiter à 4 chiffres max
             chiffres = chiffres.substring(0, 4);
 
+            // Valider et corriger les heures (00-23)
+            if (chiffres.length >= 1) {
+                let h1 = parseInt(chiffres[0], 10);
+                // Si premier chiffre > 2, on ajoute un 0 devant
+                if (h1 > 2) {
+                    chiffres = "0" + chiffres;
+                    chiffres = chiffres.substring(0, 4);
+                }
+            }
+            if (chiffres.length >= 2) {
+                let heures = parseInt(chiffres.substring(0, 2), 10);
+                if (heures > 23) {
+                    chiffres = "23" + chiffres.substring(2);
+                }
+            }
+
+            // Valider et corriger les minutes (00-59)
+            if (chiffres.length >= 3) {
+                let m1 = parseInt(chiffres[2], 10);
+                // Si premier chiffre des minutes > 5, on le limite à 5
+                if (m1 > 5) {
+                    chiffres = chiffres.substring(0, 2) + "5" + (chiffres[3] || "");
+                }
+            }
+            if (chiffres.length >= 4) {
+                let minutes = parseInt(chiffres.substring(2, 4), 10);
+                if (minutes > 59) {
+                    chiffres = chiffres.substring(0, 2) + "59";
+                }
+            }
+
             // Formater en HH:MM
             if (chiffres.length > 2) {
                 this.value = chiffres.substring(0, 2) + ":" + chiffres.substring(2);
