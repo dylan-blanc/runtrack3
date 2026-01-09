@@ -61,8 +61,8 @@ function AfficherHeure() {
     if (ElementHorloge) {
         ElementHorloge.innerHTML = heureFormatee;
     }
-    const ElementAllarmeHeure = document.getElementById("AllarmeHeure");
-    if (ElementAllarmeHeure) {
+    const ElementAlarmeHeure = document.getElementById("AlarmeHeure");
+    if (ElementAlarmeHeure) {
         ElementAllarmeHeure.innerHTML = heureFormatee;
     }
 }
@@ -87,22 +87,75 @@ document.addEventListener("DOMContentLoaded", function () {
 * ***********************************************************
 */
 
-let NombreTour = 1;
-let ChronoInterval = null;
-let ChronoHeure = 0;
-let ChronoMinutes = 0;
-let ChronoSecondes = 0;
-let ChronoMilliseconds = 0;
+let tempsEcoule = 0;
+let intervalId = null;
+let enMarche = false;
+let tours = [];
+function toggleChrono() {
+if (enMarche) {
+arreter();
+} else {
+demarrer();
+}
+}
+function demarrer() {
+enMarche = true;
+intervalId = setInterval(function() {
+tempsEcoule++;
+afficherTemps(tempsEcoule);
+}, 1000);
+document.getElementById("btnMarcheArret").textContent = "Arrêter";
+}
+function arreter() {
+enMarche = false;
+clearInterval(intervalId);
+document.getElementById("btnMarcheArret").textContent = "Démarrer";
+}
+
+function enregistrerTour() {
+tours.push(tempsEcoule);
+ajouterTour();
+}
+
+
+
+
+function afficherTemps() {
+    const elementChrono = document.getElementById("AfficherChrono");
+    if (elementChrono) {
+        elementChrono.innerHTML = `${formatNumber(ChronoHeure)}:${formatNumber(ChronoMinutes)}:${formatNumber(ChronoSecondes)}:${formatNumber(ChronoMilliseconds)}`;
+    }
+}
+
+document.getElementById("btnMarcheArret").addEventListener("click", function () {
+    demarrerChrono();
+});
+
+document.getElementById("btnReset").addEventListener("click", function () {
+    ChronoHeure = 0;
+    ChronoMinutes = 0;
+    ChronoSecondes = 0;
+    ChronoMilliseconds = 0;
+    clearInterval(ChronoInterval);
+    ChronoInterval = null;
+    updateChronoDisplay();
+});
+
+
 
 function ajouterTour() {
     const elementTours = document.getElementById("AfficherTour");
     if (elementTours) {
         const li = document.createElement("li");
-        li.textContent = `Tour n° ${NombreTour} : ${formatNumber(ChronoHeure)}:${formatNumber(ChronoMinutes)}:${formatNumber(ChronoSecondes)}:${formatNumber(ChronoMilliseconds)}`;
+        li.textContent = `Tour n° ${tours.length} : ${formatNumber(ChronoHeure)}:${formatNumber(ChronoMinutes)}:${formatNumber(ChronoSecondes)}:${formatNumber(ChronoMilliseconds)}`;
         elementTours.appendChild(li);
         NombreTour++;
     }
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+  toggleChrono();
+});
 
 
 
