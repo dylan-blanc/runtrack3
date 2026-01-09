@@ -82,8 +82,11 @@ document.addEventListener("DOMContentLoaded", function () {
 */
 let Alarme = [];
 
-function ajouterAlarme() {
-    const inputTime = document.querySelector("#Reveil input[type='time']");
+function ajouterAlarme(sourceInputId = null) {
+    // Si un ID source est fourni, utiliser cet input, sinon utiliser celui de #Reveil
+    const inputTime = sourceInputId
+        ? document.getElementById(sourceInputId)
+        : document.querySelector("#Reveil input[type='time']");
     const inputText = document.querySelector("#Reveil input[type='text']");
     const ul = document.getElementById("AfficherAlarme");
 
@@ -130,6 +133,16 @@ function verifierAlarmes() {
 setInterval(verifierAlarmes, 1000);
 
 document.getElementById("btnAjouterAlarme").addEventListener("click", ajouterAlarme);
+// Écouteur global pour la touche "Entrée" sur les inputs time
+window.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        // Vérifie si l'élément actif est un input de type time
+        if (document.activeElement && document.activeElement.type === "time") {
+            event.preventDefault();
+            ajouterAlarme();
+        }
+    }
+});
 
 
 /*
