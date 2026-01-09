@@ -80,9 +80,58 @@ document.addEventListener("DOMContentLoaded", function () {
 /*
 * **************************** REVEIL *************************************
 */
+let Alarme = [];
 
+function ajouterAlarme() {
+    const inputs = document.querySelectorAll("#Reveil input");
+    const ul = document.getElementById("AfficherAlarme");
 
+    // Récupérer les valeurs de tous les inputs
+    let valeurs = [];
+    inputs.forEach(input => {
+        if (input.value) valeurs.push(input.value);
+    });
 
+    if (valeurs.length > 0) {
+        const alarmeTexte = valeurs.join(" - ");
+        Alarme.push(alarmeTexte);
+        const li = document.createElement("li");
+        li.textContent = `Alarme n° ${Alarme.length} : ${alarmeTexte}`;
+        ul.appendChild(li);
+
+        // Réinitialiser tous les inputs
+        inputs.forEach(input => input.value = "");
+    }
+}
+
+function initFormatageTempsReel() {
+    const inputText = document.querySelector("#Reveil input[type='text']");
+    if (inputText) {
+        inputText.placeholder = "HH:MM";
+        inputText.maxLength = 5; // "HH:MM" = 5 caractères
+
+        inputText.addEventListener("input", function (e) {
+            // Garder uniquement les chiffres
+            let chiffres = this.value.replace(/\D/g, "");
+
+            // Limiter à 4 chiffres max
+            chiffres = chiffres.substring(0, 4);
+
+            // Formater en HH:MM
+            if (chiffres.length > 2) {
+                this.value = chiffres.substring(0, 2) + ":" + chiffres.substring(2);
+            } else {
+                this.value = chiffres;
+            }
+        });
+    }
+}
+
+document.getElementById("btnAjouterAlarme").addEventListener("click", ajouterAlarme);
+
+document.addEventListener("DOMContentLoaded", function () {
+    initFormatageTempsReel();
+});
 
 /*
 * ************************* Chronometre ***********************************
